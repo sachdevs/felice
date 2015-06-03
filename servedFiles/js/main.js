@@ -45,10 +45,25 @@ if (access_token && (state == null || state !== storedState)) {
                 'Authorization': 'Bearer ' + access_token
             },
             success: function(response) {
-                $.get('templates/mainData.handlebars', function(data) {
-                    var userProfileTemplate = Handlebars.compile(data);
-                    $('#logged-in').html(userProfileTemplate(response));
-                }, 'html');
+                $.ajax({
+                    url: 'https://api.spotify.com/v1/me/tracks?limit=500',
+                    headers: {
+                        'Authorization': 'Bearer ' + access_token
+                    },
+                    success: function(tracks) {
+
+                        alert(JSON.stringify(tracks, null, 4));
+                        console.log(tracks);
+                        console.log(response);
+
+                        $.get('templates/songlist.handlebars', function(data) {
+                            var userProfileTemplate = Handlebars.compile(data);
+                            var songlistTemplate = Handlebars.compile(data)
+                            //$('#logged-in').html(userProfileTemplate(response));
+                            $('#logged-in').html(songlistTemplate(tracks))
+                        }, 'html');
+                    }
+                });
 
                 $('#login').hide();
                 $('#loggedin').show();
@@ -70,7 +85,7 @@ loginBtn.click(function() {
     var state = generateRandomString(16);
 
     localStorage.setItem(stateKey, state);
-    var scope = 'user-read-private user-read-email';
+    var scope = 'user-read-private user-read-email user-library-read';
 
     var url = 'https://accounts.spotify.com/authorize';
     url += '?response_type=token';
