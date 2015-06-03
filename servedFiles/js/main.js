@@ -44,10 +44,13 @@ else {
             getUserTracklist(access_token, function(tracks) {
                 getCompiledTemplate('songlist', function(template) {
                     //$('#logged-in').html(userProfileTemplate(response));
+                    for(var i = 0; i < tracks.items.length; i++){
+                    	tracks.items[i].genres = getEchonestGenres(tracks.items[i].track.id);
+                    }
+                    console.log(tracks);
                     $('#logged-in').html(template(tracks))
                 });
                 tracklist = []
-                alert(tracks.total);
                 for (var i = 0; i < tracks.items.length; i++) {
                     tracklist.push(tracks.items[i].track.name);
                 }
@@ -55,7 +58,7 @@ else {
             });
         });
         $('#login').hide();
-        $('#loggedin').show();
+        $('#logged-in').show();
     }
     else {
         $('#login').show();
@@ -112,5 +115,11 @@ function getUserTracklist(access_token, callback) {
 function getCompiledTemplate(filename, callback) {
     $.get('templates/' + filename + '.handlebars', function(data) {
         callback(Handlebars.compile(data));
+    }, 'html');
+}
+
+function getEchonestGenres(spotify_id, callback){
+	$.get('http://developer.echonest.com/api/v4/song/profile?api_key=JWARDUHE5GKDMWFDJ&format=json&track_id=spotify:track:'+spotify_id+'&bucket=song_type', function(obj) {
+        callback(obj.songs[0].song_type);
     }, 'html');
 }

@@ -1,5 +1,11 @@
 <ul>
 	{{#each items}}
 	<h5>{{track.name}}</h5>
+	<ul>
+		<li>{{track.id}}</li>
+		{{#each genres}}
+		<li>{{this}}</li>
+		{{/each}}
+	</ul>
 	{{/each}}
 </ul>
