@@ -44,17 +44,15 @@ else {
             getUserTracklist(access_token, function(tracks) {
                 getCompiledTemplate('songlist', function(template) {
                     //$('#logged-in').html(userProfileTemplate(response));
-                    for(var i = 0; i < tracks.items.length; i++){
-                    	tracks.items[i].genres = getEchonestGenres(tracks.items[i].track.id);
-                    }
-                    console.log(tracks);
                     $('#logged-in').html(template(tracks))
                 });
-                tracklist = []
+                trackids = []
                 for (var i = 0; i < tracks.items.length; i++) {
-                    tracklist.push(tracks.items[i].track.name);
+                	getEchonestGenres(tracks.items[i].track.id, function(genres){
+                    	tracklist.push([tracks.items[i].track.name, genres]);
+                	});
                 }
-                console.log(tracklist);
+                console.log(trackids);
             });
         });
         $('#login').hide();
@@ -119,7 +117,7 @@ function getCompiledTemplate(filename, callback) {
 }
 
 function getEchonestGenres(spotify_id, callback){
-	$.get('http://developer.echonest.com/api/v4/song/profile?api_key=JWARDUHE5GKDMWFDJ&format=json&track_id=spotify:track:'+spotify_id+'&bucket=song_type', function(obj) {
-        callback(obj.songs[0].song_type);
-    }, 'html');
+    $.getJSON('http://developer.echonest.com/api/v4/song/profile?api_key=JWARDUHE5GKDMWFDJ&format=jsonp&track_id=spotify:track:'+spotify_id+'&bucket=song_type&callback=?', function(res) {
+        console.log(res.response.songs[0].song_type);
+}	);
 }
