@@ -34,30 +34,30 @@ var access_token = params.access_token,
     state = params.state,
     storedState = localStorage.getItem(stateKey);
 
-
-
-//TODO abstract the following if statement
 if (access_token && (state == null || state !== storedState)) {
     alert("error");
-} else {
+}
+else {
     localStorage.removeItem(stateKey);
     if (access_token) {
-    	getUserProfile(access_token, function(response){
-    		getUserTracklist(access_token, function(tracks){
-    			getCompiledTemplate('songlist', function(template){
-    				//$('#logged-in').html(userProfileTemplate(response));
-    				$('#logged-in').html(template(tracks))
-    			});
-    			tracklist = []
-    			for(var i = 0; i < tracks.items.length; i++){
-    				tracklist.push(tracks.items[i].track.name);
-    			}
-    			console.log(tracklist);
-    		});
-    	});
-		$('#login').hide();
-		$('#loggedin').show();
-    } else {
+        getUserProfile(access_token, function(response) {
+            getUserTracklist(access_token, function(tracks) {
+                getCompiledTemplate('songlist', function(template) {
+                    //$('#logged-in').html(userProfileTemplate(response));
+                    $('#logged-in').html(template(tracks))
+                });
+                tracklist = []
+                alert(tracks.total);
+                for (var i = 0; i < tracks.items.length; i++) {
+                    tracklist.push(tracks.items[i].track.name);
+                }
+                console.log(tracklist);
+            });
+        });
+        $('#login').hide();
+        $('#loggedin').show();
+    }
+    else {
         $('#login').show();
         $('#logged-in').hide();
     }
@@ -85,30 +85,32 @@ loginBtn.click(function() {
     window.location = url;
 });
 
-function getUserProfile(access_token, callback){
-	$.ajax({
+function getUserProfile(access_token, callback) {
+    $.ajax({
         url: 'https://api.spotify.com/v1/me',
         headers: {
             'Authorization': 'Bearer ' + access_token
         },
         success: function(response) {
-        	callback(response);
+            callback(response);
         }
     });
 }
-function getUserTracklist(access_token, callback){
+
+function getUserTracklist(access_token, callback) {
     $.ajax({
-	    url: 'https://api.spotify.com/v1/me/tracks?limit=50',
-	    headers: {
-	        'Authorization': 'Bearer ' + access_token
-	    },
-	    success: function(tracks) {
-	    	callback(tracks);
-	    }
+        url: 'https://api.spotify.com/v1/me/tracks?limit=50',
+        headers: {
+            'Authorization': 'Bearer ' + access_token
+        },
+        success: function(tracks) {
+            callback(tracks);
+        }
     });
 }
-function getCompiledTemplate(filename, callback){
-    $.get('templates/'+filename+'.handlebars', function(data) {
+
+function getCompiledTemplate(filename, callback) {
+    $.get('templates/' + filename + '.handlebars', function(data) {
         callback(Handlebars.compile(data));
     }, 'html');
 }
