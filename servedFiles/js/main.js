@@ -145,6 +145,7 @@ function getAlbumIds (tracklist) {
 	album_ids = [];
 	for(var j = 0; j < Math.floor(tracklist.length/20); j++){
 		album_id = "";
+		//TODO fix these iterations
 		for(var i = j*20; i < (j*20)+20; i++){
 			if (i !== (j*20)+19)
 				album_id += tracklist[i].track.album.id + ",";
