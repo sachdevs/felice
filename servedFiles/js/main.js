@@ -44,15 +44,11 @@ else {
             getUserTracklist(access_token, function(tracks) {
                 getCompiledTemplate('songlist', function(template) {
                     //$('#logged-in').html(userProfileTemplate(response));
-                    $('#logged-in').html(template(tracks))
+                    $('#logged-in').html(template(tracks));
                 });
-                trackids = []
-                for (var i = 0; i < tracks.items.length; i++) {
-                	getEchonestGenres(tracks.items[i].track.id, function(genres){
-                    	tracklist.push([tracks.items[i].track.name, genres]);
-                	});
-                }
-                console.log(trackids);
+                getPlaylistGenres(tracks, access_token, function(genres){
+                	console.log(genres);
+                });
             });
         });
         $('#login').hide();
@@ -116,8 +112,52 @@ function getCompiledTemplate(filename, callback) {
     }, 'html');
 }
 
-function getEchonestGenres(spotify_id, callback){
-    $.getJSON('http://developer.echonest.com/api/v4/song/profile?api_key=JWARDUHE5GKDMWFDJ&format=jsonp&track_id=spotify:track:'+spotify_id+'&bucket=song_type&callback=?', function(res) {
-        console.log(res.response.songs[0].song_type);
-}	);
+function getPlaylistGenres (tracklist, access_token, callback) {
+	album_ids = getAlbumIds(tracklist.items);
+	console.log(album_ids);
+	genreList = [];
+	for(var i = 0; i < album_ids.length; i++){
+		(function(genres, i){
+			getGenreHelper(album_ids[i], access_token, function(genres) {
+				genreList = genreList.concat(genres);
+				if(i == album_ids.length-1){
+					callback(genreList);
+				}
+			});
+		})(genreList, i);
+	}
 }
+
+function getGenreHelper(album_ids, access_token, callback){
+	$.ajax({
+        url: 'https://api.spotify.com/v1/albums/?ids='+album_ids,
+        headers: {
+            'Authorization': 'Bearer ' + access_token
+        },
+        success: function(genres) {
+        	//TODO these are not actually genres.
+            callback(genres);
+        }
+    });
+}
+
+function getAlbumIds (tracklist) {
+	album_ids = [];
+	for(var j = 0; j < Math.floor(tracklist.length/20); j++){
+		album_id = "";
+		for(var i = j*20; i < (j*20)+20; i++){
+			if (i !== (j*20)+19)
+				album_id += tracklist[i].track.album.id + ",";
+			else
+				album_id += tracklist[i].track.album.id;
+		}
+		album_ids.push(album_id);
+	}
+	return album_ids;
+}
+
+// function getEchonestGenres(spotify_id, callback){
+//     $.getJSON('http://developer.echonest.com/api/v4/song/profile?api_key=JWARDUHE5GKDMWFDJ&format=jsonp&track_id=spotify:track:'+spotify_id+'&bucket=song_type&callback=?', function(res) {
+//         console.log(res.response.songs[0].song_type);
+// 	});
+// }
