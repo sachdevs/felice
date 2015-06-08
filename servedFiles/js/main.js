@@ -44,13 +44,14 @@ else {
             getUserTracklist(access_token, function(tracks) {
                 getCompiledTemplate('songlist', function(template) {
                     //$('#logged-in').html(userProfileTemplate(response));
-                    $('#logged-in').html(template(tracks));
+                    //$('#logged-in').html(template(tracks));
                 });
                 getPlaylistGenres(tracks, function(genres, artistObj) {
                     console.log(genres);
                     console.log(artistObj);
                     data = formatGenres(genres);
                     drawPieGraph(artistObj, data);
+                    $(window).resize(function () { drawPieGraph(artistObj, data); });
                 });
             });
         });
@@ -190,7 +191,8 @@ function formatGenres(genres) {
 }
 
 function drawPieGraph(obj, data) {
-    var svg = d3.select("body")
+    $("#logged-in").html("");
+    var svg = d3.select("#logged-in")
         .append("svg")
         .append("g")
 
@@ -201,7 +203,7 @@ function drawPieGraph(obj, data) {
     svg.append("g")
         .attr("class", "lines");
 
-    var width = 960,
+    var width = 600,
         height = 450,
         radius = Math.min(width, height) / 2;
 
@@ -219,7 +221,7 @@ function drawPieGraph(obj, data) {
         .innerRadius(radius * 0.9)
         .outerRadius(radius * 0.9);
 
-    svg.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+    svg.attr("transform", "translate(" + ((width / 2) + 50)+ "," + height / 2 + ")");
 
     var key = function(d) {
         return d.data.label;
@@ -283,7 +285,7 @@ function drawPieGraph(obj, data) {
     }
 
     function change(data) {
-        var duration = +document.getElementById("duration").value;
+        var duration = 2500;
         var data0 = svg.select(".slices").selectAll("path.slice")
             .data().map(function(d) {
                 return d.data
@@ -420,9 +422,9 @@ function drawPieGraph(obj, data) {
             .exit().transition().delay(duration)
             .remove();
     };
-    $('.slice').hover(function() {
-        $('body').hide();
-    }, function(){
-        $('body').show();
-    });
+    // $('.slice').hover(function() {
+    //     $('body').hide();
+    // }, function(){
+    //     $('body').show();
+    // });
 }

@@ -1,2 +1,27 @@
-body{
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    position: relative;
+    background-color: #8B668B;
+}
+svg {
+    width: 750px;
+    height: 500px;
+    float: left;
+}
+g {
+	margin-left: 0px;
+    margin-right: 0px;
+}
+path.slice {
+    stroke-width: 2px;
+}
+polyline {
+    opacity: .3;
+    stroke: black;
+    stroke-width: 2px;
+    fill: none;
+}
+.container{
+	margin-left: 5px;
+	margin-right: 5px;
 }
