@@ -46,8 +46,9 @@ else {
                     //$('#logged-in').html(userProfileTemplate(response));
                     $('#logged-in').html(template(tracks));
                 });
-                getPlaylistGenres(tracks, function(genres){
+                getPlaylistGenres(tracks, function(genres, artistObj){
                 	console.log(genres);
+                    console.log(artistObj);
                 });
             });
         });
@@ -120,34 +121,41 @@ function getPlaylistGenres(tracklist, callback) {
                 obj = {
                     name: tracklist.items[i].track.artists[0].name,
                     id: tracklist.items[i].track.artists[0].id,
+                    songs: [],
                     genres: [],
                     count: 1
                 };
                 var exists = artistExists(artistObj, obj);
-                if(exists)
-                    exists.count++
+                if(exists){
+                    exists.songs.push(tracklist.items[i].track.name);
+                    exists.count++;
+                }
                 else{
                     obj.genres = genres;
+                    obj.songs.push(tracklist.items[i].track.name);
                     artistObj.push(obj);
                 }
                 if(i === tracklist.items.length-1){
-                    console.log(artistObj);
-                    countGenres(artistObj);
+                    callback(countGenres(artistObj), artistObj);
                 }
             });
         })(i, artistObj);
     }
-    //getEchonestGenres(tracklist.items[0].track.artists[0].id, function(genres){});
 }
 
 function countGenres(artistObj){
     ret = {};
     for(var i = 0; i < artistObj.length; i++){
+        multiplier = artistObj[i].count;
         for(var j = 0; j < artistObj[i].genres.length; j++){
             _name = artistObj[i].genres[j].name;
+            if(ret.hasOwnProperty(_name))
+                ret[_name] += multiplier;
+            else
+                ret[_name] = multiplier;
         }
     }
-    console.log(ret);
+    return ret;
 }
 
 function artistExists(artistObj, obj){
