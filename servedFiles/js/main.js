@@ -113,4 +113,5 @@ function getCompiledTemplate(filename, callback) {
 }
 
 function getPlaylistGenres (tracklist, access_token, callback) {
+    //make calls to echonest api. Efficient calls necessary
 }
