@@ -46,7 +46,7 @@ else {
                     //$('#logged-in').html(userProfileTemplate(response));
                     $('#logged-in').html(template(tracks));
                 });
-                getPlaylistGenres(tracks, access_token, function(genres){
+                getPlaylistGenres(tracks, function(genres){
                 	console.log(genres);
                 });
             });
@@ -112,6 +112,54 @@ function getCompiledTemplate(filename, callback) {
     }, 'html');
 }
 
-function getPlaylistGenres (tracklist, access_token, callback) {
-    //make calls to echonest api. Efficient calls necessary
+function getPlaylistGenres(tracklist, callback) {
+    artistObj = [];
+    for(var i = 0; i < tracklist.items.length; i++){
+        (function(i, artistObj){
+            getEchonestGenres(tracklist.items[i].track.artists[0].id, function(genres){
+                obj = {
+                    name: tracklist.items[i].track.artists[0].name,
+                    id: tracklist.items[i].track.artists[0].id,
+                    genres: [],
+                    count: 1
+                };
+                var exists = artistExists(artistObj, obj);
+                if(exists)
+                    exists.count++
+                else{
+                    obj.genres = genres;
+                    artistObj.push(obj);
+                }
+                if(i === tracklist.items.length-1){
+                    console.log(artistObj);
+                    countGenres(artistObj);
+                }
+            });
+        })(i, artistObj);
+    }
+    //getEchonestGenres(tracklist.items[0].track.artists[0].id, function(genres){});
+}
+
+function countGenres(artistObj){
+    ret = {};
+    for(var i = 0; i < artistObj.length; i++){
+        for(var j = 0; j < artistObj[i].genres.length; j++){
+            _name = artistObj[i].genres[j].name;
+        }
+    }
+    console.log(ret);
+}
+
+function artistExists(artistObj, obj){
+    for(var i = 0; i < artistObj.length; i++){
+        if(artistObj[i].id === obj.id)
+            return artistObj[i];
+    }
+    return undefined;
+}
+
+function getEchonestGenres(spotify_id, callback){
+    $.getJSON('http://developer.echonest.com/api/v4/artist/profile?api_key=JWARDUHE5GKDMWFDJ&format=jsonp&id=spotify:artist:'+spotify_id+'&bucket=genre&callback=?', function(res) {
+        callback(res.response.artist.genres);
+    });
 }
