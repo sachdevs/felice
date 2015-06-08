@@ -49,8 +49,9 @@ else {
                 getPlaylistGenres(tracks, function(genres, artistObj) {
                     console.log(genres);
                     console.log(artistObj);
+                    data = formatGenres(genres);
+                    drawPieGraph(artistObj, data);
                 });
-                drawPieGraph();
             });
         });
         $('#login').hide();
@@ -175,7 +176,20 @@ function getEchonestGenres(spotify_id, callback) {
     });
 }
 
-function drawPieGraph() {
+function formatGenres(genres) {
+    var ret = [];
+    for (var i in genres) {
+        if (genres.hasOwnProperty(i)) {
+            ret.push({
+                label: i,
+                value: genres[i]
+            });
+        }
+    }
+    return ret;
+}
+
+function drawPieGraph(obj, data) {
     var svg = d3.select("body")
         .append("svg")
         .append("g")
@@ -212,29 +226,39 @@ function drawPieGraph() {
     };
 
     var color = d3.scale.category20()
-        .domain(["Lorem ipsum", "dolor sit", "amet", "consectetur", "adipisicing", "elit", "sed", "do", "eiusmod", "tempor", "incididunt"])
-        //.range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+        .domain(Object.keys(obj));
+    //.range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
 
-    function randomData() {
-        var labels = color.domain();
-        return labels.map(function(label) {
-            return {
-                label: label,
-                value: Math.random()
-            }
-        }).filter(function() {
-            return Math.random() > .5;
-        }).sort(function(a, b) {
-            return d3.ascending(a.label, b.label);
-        });
-    }
+    // function randomData() {
+    //     var labels = genres;
+    //     var values = frequency;
+    //     var ret = [];
+    //     for(var i = 0; i < labels.length; i++){
+    //         ret.push({
+    //             label: labels[i],
+    //             value
+    //         });
+    //     }
+    //     return ret;
 
-    change(randomData());
+    //     // return labels.map(function(label) {
+    //     //     return {
+    //     //         label: label,
+    //     //         value: Math.random()
+    //     //     }
+    //     // }).filter(function() {
+    //     //     return Math.random() > .5;
+    //     // }).sort(function(a, b) {
+    //     //     return d3.ascending(a.label, b.label);
+    //     // });
+    // }
 
-    d3.select(".randomize")
-        .on("click", function() {
-            change(randomData());
-        });
+    change(data);
+
+    // d3.select(".randomize")
+    //     .on("click", function() {
+    //         change(randomData());
+    //     });
 
     function mergeWithFirstEqualZero(first, second) {
         var secondSet = d3.set();
@@ -396,5 +420,9 @@ function drawPieGraph() {
             .exit().transition().delay(duration)
             .remove();
     };
-
+    $('.slice').hover(function() {
+        $('body').hide();
+    }, function(){
+        $('body').show();
+    });
 }
