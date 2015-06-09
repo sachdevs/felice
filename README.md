@@ -1,9 +1,11 @@
 # felice
 A bunch of data for your Spotify music library <br>
 <h2>TODO</h2>
--Only option to get genres is to use echonest api and try to make it as efficient as possible <br>
--Contact echonest to figure out some efficent way of calling their api <br>
+-Make pie chart labels hide and show <br>
+-CSS better <br>
+-Recommend playlists <br>
+-Design UI <br>
+-What is the actual purpose of this app? <br>
+-Think about incorporating fb auth or some way to view friends' taste in music <br>
 -Implement require js to modularize Spotify and Echonest API calls. <br>
--Echonest jsonp calls <br>
--d3js animated pie chart <br>
 -d3js time line graph <br>
