@@ -1,12 +1,14 @@
 function cachedTable(tableName, columns) {
     if (!columns) {
-        if (!localStorage.getItem(tableName))
-            return -1;
+        if (!localStorage.getItem(tableName)) {
+            this.database = undefined;
+            return;
+        }
         this.database = JSON.parse(localStorage.getItem(tableName));
         this.tableName = tableName;
         this.columns = Object.keys(this.database.columns);
         this.rownumber = this.database.rownumber;
-        return 0;
+        return;
     }
     this.database = {};
     this.database.columns = {};
@@ -25,7 +27,7 @@ cachedTable.prototype = {
     constructor: cachedTable,
     addRow: function(row) {
         if (row.length !== this.columns.length)
-            throw "Invalid number of items for row, line 9 cachedTable.js"
+            throw "Invalid number of items for row, line 9 cachedTable.js";
         for (var i = 0; i < this.columns.length; i++) {
             if (!this.database.columns[this.columns[i]].hasOwnProperty(row[i]))
                 this.database.columns[this.columns[i]][row[i]] = [];
@@ -34,7 +36,6 @@ cachedTable.prototype = {
         this.database.allrows.push(row);
         this.rownumber++;
         this.database.rownumber = this.rownumber;
-        console.log(this.database);
         localStorage.setItem(this.tableName, JSON.stringify(this.database));
     },
     getRow: function(column, value) {
@@ -47,8 +48,30 @@ cachedTable.prototype = {
         for (var i = 0; i < getRow.length; i++) {
             ret.push(this.database.allrows[getRow[i]]);
         }
-        console.log(ret);
         return ret;
+    },
+    getRowIds: function(column, value) {
+        if (!this.database.columns.hasOwnProperty(column))
+            throw "column does not exist";
+        if (!this.database.columns[column].hasOwnProperty(value))
+            throw "value does not exist";
+        return this.database.columns[column][value];
+    },
+    updateRows: function(column, value, columnToChange, valueToChange) {
+        if (!this.database.columns.hasOwnProperty(columnToChange))
+            throw "column does not exist";
+        var _row = this.getRowIds(column, value);
+        var column_id = Object.keys(this.database.columns).indexOf(columnToChange);
+        for (var i = 0; i < _row.length; i++) {
+            _value = this.database.allrows[_row[i]][column_id];
+            this.database.allrows[_row[i]][column_id] = valueToChange;
+            var tempRowNumber = this.database.columns[columnToChange]._value;
+            delete this.database.columns[columnToChange]._value;
+            this.database.columns[columnToChange][valueToChange] = tempRowNumber;
+        }
+        console.log(this.database);
+        //         console.log(this.getRow('genre', 'plswork'));
+        //THIS FUNCTION SUCKS. I NEED TO MAKE SOME SORT OF PRIMARY KEY
     },
     _log: function() {
         console.log(localStorage.getItem(this.tableName));
@@ -56,7 +79,7 @@ cachedTable.prototype = {
     _clear: function() {
         localStorage.clear();
     }
-}
+};
 
 // var hi = new cachedTable('lol', ['a', 'b', 'c']);
 
