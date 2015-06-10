@@ -14,9 +14,11 @@
             <button id="login-button" class="btn btn-primary">Login with Spotify</button>
         </div>
         <div id="logged-in">
-            <div id="pie"></div>
-            <div id="line">
-                <svg id="visualisation"></svg>
+            <div id="graph-container">
+                <div id="pie"></div>
+                <div id="line">
+                    <svg id="visualisation"></svg>
+                </div>
             </div>
         </div>
     </div>
@@ -24,7 +26,11 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="js/cachedTable.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/oauth.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/drawables.js"></script>
 </body>
 
 </html>
