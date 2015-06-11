@@ -65,10 +65,13 @@ cachedTable.prototype = {
         for (var i = 0; i < _row.length; i++) {
             _value = this.database.allrows[_row[i]][column_id];
             this.database.allrows[_row[i]][column_id] = valueToChange;
-            var tempRowNumber = this.database.columns[columnToChange]._value;
-            delete this.database.columns[columnToChange]._value;
+            var tempRowNumber = this.database.columns[columnToChange][_value];
+            console.log(tempRowNumber);
+            delete this.database.columns[columnToChange][_value];
+            console.log(tempRowNumber);
             this.database.columns[columnToChange][valueToChange] = tempRowNumber;
         }
+        localStorage.setItem(this.tableName, JSON.stringify(this.database));
         console.log(this.database);
         //         console.log(this.getRow('genre', 'plswork'));
         //THIS FUNCTION SUCKS. I NEED TO MAKE SOME SORT OF PRIMARY KEY
