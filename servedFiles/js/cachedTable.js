@@ -60,16 +60,25 @@ cachedTable.prototype = {
     updateRows: function(column, value, columnToChange, valueToChange) {
         if (!this.database.columns.hasOwnProperty(columnToChange))
             throw "column does not exist";
-        var _row = this.getRowIds(column, value);
+        var _row = this.getRowIds(column, value).slice();
         var column_id = Object.keys(this.database.columns).indexOf(columnToChange);
+        console.log(_row);
         for (var i = 0; i < _row.length; i++) {
             _value = this.database.allrows[_row[i]][column_id];
             this.database.allrows[_row[i]][column_id] = valueToChange;
-            var tempRowNumber = this.database.columns[columnToChange][_value];
-            console.log(tempRowNumber);
-            delete this.database.columns[columnToChange][_value];
-            console.log(tempRowNumber);
-            this.database.columns[columnToChange][valueToChange] = tempRowNumber;
+            var rowIndex = this.database.columns[columnToChange][_value].indexOf(_row[i]);
+            this.database.columns[columnToChange][_value].splice(rowIndex,1);
+            if(this.database.columns[columnToChange][_value].length === 0){
+                delete this.database.columns[columnToChange][_value];
+            }
+            console.log(this.database.columns[columnToChange][_value]);
+            console.log(_row[i]);
+            if(!this.database.columns[columnToChange].hasOwnProperty(valueToChange)){
+                this.database.columns[columnToChange][valueToChange] = [];
+                this.database.columns[columnToChange][valueToChange].push(_row[i]);
+            }
+            else
+                this.database.columns[columnToChange][valueToChange].push(_row[i]);
         }
         localStorage.setItem(this.tableName, JSON.stringify(this.database));
         console.log(this.database);
