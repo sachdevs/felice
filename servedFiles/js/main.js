@@ -51,6 +51,5 @@ function getDatabase(tracks) {
         table.addRow([tracks.items[i].track.name, tracks.items[i].track.artists[0].name, tracks.items[i].track.artists[0].id, tracks.items[i].track.album.name, tracks.items[i].track.id, null,
             tracks.items[i].added_at, tracks.items[i].track.href, tracks.items[i].track.popularity]);
     }
-    table.updateRows('artist', 'Childish Gambino', 'genre', 'plswork');
     return table;
 }
