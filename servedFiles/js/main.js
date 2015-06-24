@@ -1,6 +1,15 @@
 if (access_token && (state == null || state !== storedState)) {
     alert("error");
 }
+/**
+ * check spotify api docs for rules on states.
+ * TODO Investigate if state and access token can remain over time, new one is not needed.
+ * session cookie?
+ * somehow make refresh not fuck with everything
+ * save login info!!!!!!!
+ * check how fb or flow does it
+ * see if the fix is as simple as not removing the stateKey (first line of else)
+ */
 else {
     localStorage.removeItem(stateKey);
     if (access_token) {
