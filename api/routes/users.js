@@ -19,17 +19,17 @@ function listUsers(done) {
 
 function findById(id, done) {
     User.findById(id, function(err, obj) {
+        	console.log(obj);
         if (err)
             done(err);
         else{
-        	console.log(obj);
             done(obj);
         }
     });
 }
 
 router.get('/:userId', function(req, res) {
-    findById(req.params.userId, obj, function(obj){
+    findById(req.params.userId, function(obj){
     	console.log("in");
     	res.json(obj);
     });
