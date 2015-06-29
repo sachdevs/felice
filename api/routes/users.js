@@ -5,7 +5,7 @@ var router = express.Router();
 
 /* GET users listing. */
 
-function listUsers() {
+function listUsers(done) {
     User.find({}, function(err, users) {
         var userMap = {};
 
@@ -13,25 +13,32 @@ function listUsers() {
             userMap[user._id] = user;
         });
 
-        res.json(userMap);
+        return done(userMap);
     });
 }
 
-function findById(id) {
+function findById(id, done) {
     User.findById(id, function(err, obj) {
         if (err)
-            return err;
-        else
-            return obj;
+            done(err);
+        else{
+        	console.log(obj);
+            done(obj);
+        }
     });
 }
 
 router.get('/:userId', function(req, res) {
-	res.json(findById(req.params.userId));
+    findById(req.params.userId, obj, function(obj){
+    	console.log("in");
+    	res.json(obj);
+    });
 });
 
 router.get('/', function(req, res) {
-    res.json(listUsers());
+    listUsers(function(obj) {
+        res.json(obj);
+    });
 });
 
 router.post('/', function(req, res) {
@@ -48,24 +55,27 @@ router.post('/', function(req, res) {
 });
 
 router.put('/:userId', function(req, res) {
-    var user = findById(req.params.userId);
-    user.userId = req.body.userId;
-    user.name = req.body.name;
-    user.genreList = req.body.genreList;
-    user.save(function(err) {
-        if (err)
-            res.send(err);
-        else
-            res.json(req.body);
+    findById(req.params.userId, function(user) {
+        user.userId = req.body.userId;
+        user.name = req.body.name;
+        user.genreList = req.body.genreList;
+        user.save(function(err) {
+            if (err)
+                res.send(err);
+            else
+                res.json(req.body);
+        });
     });
 });
 
-router.delete('/:userId', function(req, res){
-	User.findByIdAndRemove(req.params.userId, function(err){
-		if(err)
-			res.send(err);
-		res.json(msg: 'User deleted');
-	});
+router.delete('/:userId', function(req, res) {
+    User.findByIdAndRemove(req.params.userId, function(err) {
+        if (err)
+            res.send(err);
+        res.json({
+            msg: 'User deleted'
+        });
+    });
 });
 
 module.exports = router;
