@@ -14,5 +14,4 @@ var UserSchema = new Schema({
     //Top ten genres
     genreList: [String]
 });
-
 module.exports = mongoose.model('User', UserSchema);
