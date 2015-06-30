@@ -1,25 +1,81 @@
 var express = require('express'),
-	mongoose = require('mongoose');
+    mongoose = require('mongoose');
 var User = require('../models/user');
 var router = express.Router();
 
 /* GET users listing. */
-router.get('/', function(req, res) {
-  res.json({msg: 'respond with a resource'});
+
+function listUsers(done) {
+    User.find({}, function(err, users) {
+        var userMap = {};
+
+        users.forEach(function(user) {
+            userMap[user._id] = user;
+        });
+
+        return done(userMap);
+    });
+}
+
+function findById(id, done) {
+    User.findById(id, function(err, obj) {
+        	console.log(obj);
+        if (err)
+            done(err);
+        else{
+            done(obj);
+        }
+    });
+}
+
+router.get('/:userId', function(req, res) {
+    findById(req.params.userId, function(obj){
+    	console.log("in");
+    	res.json(obj);
+    });
 });
 
-router.post('/', function(req, res){
-	var user = new User();
-	user.userId = req.body.userId;
-	user.name = req.body.name;
-	user.genreList = ["hi", "hii"];
-	user.save(function(err){
-		if(err)
-			res.send(err);
+router.get('/', function(req, res) {
+    listUsers(function(obj) {
+        res.json(obj);
+    });
+});
 
-		res.json({msg: "hi"});
-		// res.json(user);
-	});
+router.post('/', function(req, res) {
+    var user = new User();
+    user.userId = req.body.userId;
+    user.name = req.body.name;
+    user.genreList = req.body.genreList;
+    user.save(function(err) {
+        if (err)
+            res.send(err);
+        else
+            res.json(req.body);
+    });
+});
+
+router.put('/:userId', function(req, res) {
+    findById(req.params.userId, function(user) {
+        user.userId = req.body.userId;
+        user.name = req.body.name;
+        user.genreList = req.body.genreList;
+        user.save(function(err) {
+            if (err)
+                res.send(err);
+            else
+                res.json(req.body);
+        });
+    });
+});
+
+router.delete('/:userId', function(req, res) {
+    User.findByIdAndRemove(req.params.userId, function(err) {
+        if (err)
+            res.send(err);
+        res.json({
+            msg: 'User deleted'
+        });
+    });
 });
 
 module.exports = router;
