@@ -7,6 +7,9 @@ var router = express.Router();
 
 function listUsers(done) {
     User.find({}, function(err, users) {
+        if (err)
+            return err;
+
         var userMap = {};
 
         users.forEach(function(user) {
@@ -18,20 +21,18 @@ function listUsers(done) {
 }
 
 function findById(id, done) {
-    User.findById(id, function(err, obj) {
-        	console.log(obj);
+    User.find({
+        userId: id
+    }).exec(function(err, user) {
         if (err)
-            done(err);
-        else{
-            done(obj);
-        }
+            return err;
+        return done(user[0]);
     });
 }
 
 router.get('/:userId', function(req, res) {
-    findById(req.params.userId, function(obj){
-    	console.log("in");
-    	res.json(obj);
+    findById(req.params.userId, function(obj) {
+        res.json(obj);
     });
 });
 
@@ -69,11 +70,20 @@ router.put('/:userId', function(req, res) {
 });
 
 router.delete('/:userId', function(req, res) {
-    User.findByIdAndRemove(req.params.userId, function(err) {
-        if (err)
-            res.send(err);
-        res.json({
-            msg: 'User deleted'
+    findById(req.params.userId, function(obj) {
+        if(obj === undefined) {
+		   res.statusCode = 404;
+		   res.json({msg: 'Not found'});
+		}
+		console.log(obj);
+        User.remove({
+            userId: req.params.userId
+        }, function(err) {
+            if (err)
+                res.send(err);
+            res.json({
+                msg: 'User has been deleted'
+            });
         });
     });
 });
