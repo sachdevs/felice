@@ -9,17 +9,17 @@ router.get('/', function(req, res) {
 });
 
 router.post('/', function(req, res){
-	res.json({msg: 'u dun goofed'});
-	// var user = new User();
-	// user.userId = req.body.userId;
-	// user.name = req.body.name;
-	// user.genreList = req.body.genreList;
-	// user.save(function(err){
-	// 	if(err)
-	// 		res.json({msg: 'u dun goofed'});
-	// 	else
-	// 		res.json(req.body);
-	// });
+	var user = new User();
+	user.userId = req.body.userId;
+	user.name = req.body.name;
+	user.genreList = ["hi", "hii"];
+	user.save(function(err){
+		if(err)
+			res.send(err);
+
+		res.json({msg: "hi"});
+		// res.json(user);
+	});
 });
 
 module.exports = router;

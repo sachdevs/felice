@@ -10,4 +10,4 @@ var UserSchema = new Schema({
 	genreList: [String]
 });
 
-mongoose.model('User', UserSchema);
+module.exports = mongoose.model('User', UserSchema);
