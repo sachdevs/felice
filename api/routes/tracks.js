@@ -40,6 +40,9 @@ router.get('/', function(req, res) {
     });
 });
 
+/**
+ *  TODO
+ */
 router.post('/', function(req, res) {
     var track = new Track();
     track.trackId = req.body.trackId;
@@ -53,6 +56,9 @@ router.post('/', function(req, res) {
     });
 });
 
+/**
+ *  TODO
+ */
 router.put('/:trackId', function(req, res) {
     Track.find({
         trackId: req.params.trackId

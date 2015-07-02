@@ -40,6 +40,9 @@ router.get('/', function(req, res) {
     });
 });
 
+/**
+ *  TODO
+ */
 router.post('/', function(req, res) {
     var user = new User();
     user.userId = req.body.userId;
@@ -53,6 +56,9 @@ router.post('/', function(req, res) {
     });
 });
 
+/**
+ *  TODO
+ */
 router.put('/:userId', function(req, res) {
     User.find({
         userId: req.params.userId
