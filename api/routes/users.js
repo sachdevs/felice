@@ -82,7 +82,7 @@ router.delete('/:userId', function(req, res) {
         userId: req.params.userId
     }).exec(function(err, users) {
         if (err)
-            return res.send(err);
+            return res.status(400).send(err);
         else if (users.length === 0) {
             return res.status(404).json({
                 msg: 'Not found'
@@ -92,7 +92,7 @@ router.delete('/:userId', function(req, res) {
             userId: req.params.userId
         }, function(err) {
             if (err)
-                return res.send(err);
+                return res.status(400).send(err);
             res.json({
                 msg: 'User has been deleted'
             });
