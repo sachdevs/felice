@@ -40,25 +40,27 @@ router.get('/', function(req, res) {
     });
 });
 
-/**
- *  TODO
- */
 router.post('/', function(req, res) {
     var track = new Track();
     track.trackId = req.body.trackId;
     track.name = req.body.name;
     track.genreList = req.body.genreList;
+    track.artist = req.body.artist;
+    track.artistId = req.body.artistId;
+    track.album = req.body.album;
+    track.popularity = req.body.popularity;
+    track.duration_ms = req.body.duration_ms;
+    track.explicit = req.body.explicit;
+    track.preview_url = req.body.preview_url;
+    track.similar = req.body.similar;
     track.save(function(err) {
         if (err)
-            return res.send(err);
+            return res.status(400).send(err);
         else
             res.json(req.body);
     });
 });
 
-/**
- *  TODO
- */
 router.put('/:trackId', function(req, res) {
     Track.find({
         trackId: req.params.trackId
@@ -74,9 +76,17 @@ router.put('/:trackId', function(req, res) {
         track.trackId = req.body.trackId;
         track.name = req.body.name;
         track.genreList = req.body.genreList;
+        track.artist = req.body.artist;
+        track.artistId = req.body.artistId;
+        track.album = req.body.album;
+        track.popularity = req.body.popularity;
+        track.duration_ms = req.body.duration_ms;
+        track.explicit = req.body.explicit;
+        track.preview_url = req.body.preview_url;
+        track.similar = req.body.similar;
         track.save(function(err) {
             if (err)
-                return res.send(err);
+                return res.status(400).send(err);
             else
                 res.status(200).json(req.body);
         });

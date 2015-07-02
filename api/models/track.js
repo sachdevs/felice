@@ -9,7 +9,7 @@ var TrackSchema = new Schema({
             unique: true
         }
     },
-    genre: String,
+    genreList: [String],
     artist: String,
     artistId: String,
     album: String,

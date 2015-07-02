@@ -11,6 +11,6 @@
         "request": "~2.34.0"
     },
     "scripts": {
-        "start": "supervisor ./bin/www"
+        "start": "nodemon ./bin/www"
     }
 }
