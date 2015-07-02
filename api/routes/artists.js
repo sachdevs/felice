@@ -25,7 +25,7 @@ router.get('/:artistId', function(req, res) {
         artistId: req.params.artistId
     }).exec(function(err, artists) {
         if (err)
-            return res.send(err);
+            return res.status(400).send(err);
         else if (artists.length === 0)
             res.status(404).json({
                 msg: 'Not found'
@@ -42,12 +42,15 @@ router.get('/', function(req, res) {
 
 router.post('/', function(req, res) {
     var artist = new Artist();
-    artist.artistId = req.body.artistId;
     artist.name = req.body.name;
+    artist.artistId = req.body.artistId;
+    artist.followers = req.body.followers;
+    artist.popularity = req.body.popularity;
     artist.genreList = req.body.genreList;
+    artist.imageUrl = req.body.imageUrl;
     artist.save(function(err) {
         if (err)
-            return res.send(err);
+            return res.status(400).send(err);
         else
             res.json(req.body);
     });
@@ -58,19 +61,22 @@ router.put('/:artistId', function(req, res) {
         artistId: req.params.artistId
     }).exec(function(err, artists) {
         if (err)
-            return res.send(err);
+            return res.status(400).send(err);
         else if (artists.length === 0) {
             return res.status(404).json({
                 msg: 'Not found'
             });
         }
         var artist = artists[0];
-        artist.artistId = req.body.artistId;
         artist.name = req.body.name;
+        artist.artistId = req.body.artistId;
+        artist.followers = req.body.followers;
+        artist.popularity = req.body.popularity;
         artist.genreList = req.body.genreList;
+        artist.imageUrl = req.body.imageUrl;
         artist.save(function(err) {
             if (err)
-                return res.send(err);
+                return res.status(400).send(err);
             else
                 res.status(200).json(req.body);
         });

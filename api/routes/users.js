@@ -25,7 +25,7 @@ router.get('/:userId', function(req, res) {
         userId: req.params.userId
     }).exec(function(err, users) {
         if (err)
-            return res.send(err);
+            return res.status(400).send(err);
         else if (users.length === 0)
             res.status(404).json({
                 msg: 'Not found'
@@ -40,9 +40,6 @@ router.get('/', function(req, res) {
     });
 });
 
-/**
- *  TODO
- */
 router.post('/', function(req, res) {
     var user = new User();
     user.userId = req.body.userId;
@@ -50,21 +47,18 @@ router.post('/', function(req, res) {
     user.genreList = req.body.genreList;
     user.save(function(err) {
         if (err)
-            return res.send(err);
+            return res.status(400).send(err);
         else
             res.json(req.body);
     });
 });
 
-/**
- *  TODO
- */
 router.put('/:userId', function(req, res) {
     User.find({
         userId: req.params.userId
     }).exec(function(err, users) {
         if (err)
-            return res.send(err);
+            return res.status(400).send(err);
         else if (users.length === 0) {
             return res.status(404).json({
                 msg: 'Not found'
@@ -76,7 +70,7 @@ router.put('/:userId', function(req, res) {
         user.genreList = req.body.genreList;
         user.save(function(err) {
             if (err)
-                return res.send(err);
+                return res.status(400).send(err);
             else
                 res.status(200).json(req.body);
         });

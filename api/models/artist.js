@@ -11,7 +11,7 @@ var ArtistSchema = new Schema({
     },
     followers: Number,
     popularity: Number,
-    genres: [String],
+    genreList: [String],
     imageUrl: String
 });
 module.exports = mongoose.model('Artist', ArtistSchema);
