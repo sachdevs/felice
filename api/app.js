@@ -8,7 +8,9 @@ var express = require('express'),
 mongoose.connect('mongodb://localhost/api');
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
+var users = require('./routes/users'),
+    artists = require('./routes/artists'),
+    tracks = require('./routes/tracks');
 
 var app = express();
 
@@ -22,7 +24,9 @@ app.use(express.static(path.join(__dirname, 'public')));
  * route middleware
  */
 app.use('/api/', routes);
-app.use('/api/users', users);
+app.use('/api/users/', users);
+app.use('/api/tracks/', tracks);
+app.use('/api/artists/', artists);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

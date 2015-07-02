@@ -3,7 +3,12 @@ var mongoose = require('mongoose'),
 
 var TrackSchema = new Schema({
     name: String,
-    trackId: String,
+    trackId: {
+        type: String,
+        index: {
+            unique: true
+        }
+    },
     genre: String,
     artist: String,
     artistId: String,
