@@ -4,6 +4,7 @@ var express = require('express'),
     cookieParser = require('cookie-parser'),
     bodyParser = require('body-parser'),
     jwt = require('jsonwebtoken'),
+    secret = require('./secret').key,
     mongoose = require('mongoose');
 
 mongoose.connect('mongodb://localhost/api');
@@ -29,10 +30,32 @@ app.use(express.static(path.join(__dirname, 'public')));
  */
 app.use('/authenticate/', authenticate);
 app.use('/api/', function(req, res, next) {
-    /**
-     * CHECK TOKEN HERE
-     */
-    next();
+    // check header or url parameters or post parameters for token
+    var token = req.body.token || req.query.token || req.headers['x-access-token'];
+    if (token) {
+        // verifies secret and checks exp
+        jwt.verify(token, secret, function(err, decoded) {
+            if (err) {
+                return res.json({
+                    success: false,
+                    message: 'Failed to authenticate token.'
+                });
+            }
+            else {
+                // if everything is good, save to request for use in other routes
+                req.decoded = decoded;
+                next();
+            }
+        });
+    }
+    else {
+        // if there is no token
+        // return an error
+        return res.status(403).send({
+            success: false,
+            message: 'No token provided.'
+        });
+    }
 });
 app.use('/api/users/', users);
 app.use('/api/tracks/', tracks);
