@@ -16,14 +16,21 @@ var app = express();
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 /**
  * route middleware
  */
-app.use('/api/', routes);
+app.use('/api/', function(req, res, next) {
+    /**
+     * CHECK TOKEN HERE
+     */
+     next();
+});
 app.use('/api/users/', users);
 app.use('/api/tracks/', tracks);
 app.use('/api/artists/', artists);
