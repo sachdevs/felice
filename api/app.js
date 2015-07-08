@@ -3,12 +3,14 @@ var express = require('express'),
     logger = require('morgan'),
     cookieParser = require('cookie-parser'),
     bodyParser = require('body-parser'),
+    jwt = require('jsonwebtoken'),
     mongoose = require('mongoose');
 
 mongoose.connect('mongodb://localhost/api');
 
 var routes = require('./routes/index');
 var users = require('./routes/users'),
+    authenticate = require('./routes/authenticate'),
     artists = require('./routes/artists'),
     tracks = require('./routes/tracks');
 
@@ -25,11 +27,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 /**
  * route middleware
  */
+app.use('/authenticate/', authenticate);
 app.use('/api/', function(req, res, next) {
     /**
      * CHECK TOKEN HERE
      */
-     next();
+    next();
 });
 app.use('/api/users/', users);
 app.use('/api/tracks/', tracks);
