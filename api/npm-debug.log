@@ -1,0 +1,35 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'C:\\Program Files\\nodejs\\\\node.exe',
+1 verbose cli   'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'start' ]
+2 info using npm@2.7.4
+3 info using node@v0.12.2
+4 verbose node symlink C:\Program Files\nodejs\\node.exe
+5 verbose stack Error: Failed to parse json
+5 verbose stack Trailing comma in object at 16:3
+5 verbose stack   }
+5 verbose stack   ^
+5 verbose stack     at parseError (C:\Program Files\nodejs\node_modules\npm\node_modules\read-package-json\read-json.js:406:25)
+5 verbose stack     at parseJson (C:\Program Files\nodejs\node_modules\npm\node_modules\read-package-json\read-json.js:86:51)
+5 verbose stack     at C:\Program Files\nodejs\node_modules\npm\node_modules\read-package-json\read-json.js:60:33
+5 verbose stack     at evalmachine.<anonymous>:334:14
+5 verbose stack     at C:\Program Files\nodejs\node_modules\npm\node_modules\graceful-fs\graceful-fs.js:102:5
+5 verbose stack     at FSReqWrap.oncomplete (evalmachine.<anonymous>:95:15)
+6 verbose cwd C:\Users\sakshams\Desktop\GitHub\felice\api
+7 error Windows_NT 6.3.9600
+8 error argv "C:\\Program Files\\nodejs\\\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "start"
+9 error node v0.12.2
+10 error npm  v2.7.4
+11 error file C:\Users\sakshams\Desktop\GitHub\felice\api\package.json
+12 error code EJSONPARSE
+13 error Failed to parse json
+13 error Trailing comma in object at 16:3
+13 error   }
+13 error   ^
+14 error File: C:\Users\sakshams\Desktop\GitHub\felice\api\package.json
+15 error Failed to parse package.json data.
+15 error package.json must be actual JSON, not just JavaScript.
+15 error
+15 error This is not a bug in npm.
+15 error Tell the package author to fix their package.json file. JSON.parse
+16 verbose exit [ 1, true ]
