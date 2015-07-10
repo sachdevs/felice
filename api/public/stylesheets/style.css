@@ -4,6 +4,10 @@
     background-color: black;
 }
 .bs-sidebar {
-	width: 100px;
+	width: 40px;
+	height: 100%;
 	background-color: black;
+}
+body {
+	background-color: #121212
 }
