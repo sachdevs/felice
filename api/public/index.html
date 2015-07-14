@@ -8,7 +8,7 @@
 </head>
 
 <body>
-    <div class="bs-sidebar affix">
+<!--     <div class="bs-sidebar affix" id="sidenavbar">
         <ul class="nav bs-sidenav">
             <li class="active">
                 <ul class="nav">
@@ -17,6 +17,8 @@
                 </ul>
             </li>
         </ul>
+    </div> -->
+    <div class="sidebar-container">
     </div>
 
     <div class="container">
@@ -31,6 +33,21 @@
     <script src="models/user.js"></script>
     <script src="models/track.js"></script>
     <script src="models/artist.js"></script>
+
+    <script src="text/template" id="sidebar-template">
+    <div class="bs-sidebar affix">
+    <ul class="nav bs-sidenav">
+        <li class="active">
+            <ul class="nav">
+                <li><a href="#">1</a></li>
+                <li><a href="#">2</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>
+</script>
+
+    <script src="views/sidebar.js"></script>
     <script src="main.js"></script>
 </body>
 
