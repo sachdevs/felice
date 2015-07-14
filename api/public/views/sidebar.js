@@ -1,13 +1,19 @@
 var SidebarView = Backbone.View.extend({
 	el: $('.sidebar-container'),
 	initialize: function(){
-		alert("hi");
 		this.render();
 	},
 	render: function(){
-		var template = _.template( $("#sidebar-template").html(), {} );
-		this.$el.html(template);
+		var template = Handlebars.templates['sidebar'];
+		this.$el.html(template({}));
 	}
 });
 
 var sidebar = new SidebarView();
+
+$('.bs-sidebar').mouseenter(function(){
+	$(this).animate({width: '150px'}, 150);
+});
+$('.bs-sidebar').mouseleave(function(){
+	$(this).animate({width: '40px'}, 150);
+});

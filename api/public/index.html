@@ -8,45 +8,28 @@
 </head>
 
 <body>
-<!--     <div class="bs-sidebar affix" id="sidenavbar">
-        <ul class="nav bs-sidenav">
-            <li class="active">
-                <ul class="nav">
-                    <li><a href="#">1</a></li>
-                    <li><a href="#">2</a></li>
-                </ul>
-            </li>
-        </ul>
-    </div> -->
-    <div class="sidebar-container">
-    </div>
+    <div class="sidebar-container"></div>
 
     <div class="container">
         <h1>Welcome to felice</h1>
         <button id="login-button" class="btn btn-primary">Login with Spotify</button>
     </div>
-
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <!--Dependencies-->
     <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script src="bower_components/underscore/underscore.js"></script>
     <script src="bower_components/backbone/backbone.js"></script>
+    <script src="bower_components/handlebars/handlebars.js"></script>
+
+    <!--Models-->
     <script src="models/user.js"></script>
     <script src="models/track.js"></script>
     <script src="models/artist.js"></script>
 
-    <script src="text/template" id="sidebar-template">
-        <div class="bs-sidebar affix">
-            <ul class="nav bs-sidenav">
-                <li class="active">
-                    <ul class="nav">
-                        <li><a href="#">1</a></li>
-                        <li><a href="#">2</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-    </script>
+    <!--Compiled Templates-->
+    <script src="templates/compiled.js"></script>
 
+    <!--Views-->
     <script src="views/sidebar.js"></script>
     <script src="main.js"></script>
 </body>
