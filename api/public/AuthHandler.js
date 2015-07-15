@@ -1,5 +1,5 @@
-//main logic goes here
 //auth logic
+$('sidebar-container').hide();
 var stateKey = 'spotify_auth_state';
 
 /**
@@ -74,9 +74,26 @@ loginBtn.click(function() {
     window.location = url;
 });
 
-if(getParameterByName('code')){
+if (getParameterByName('code')) {
     loginBtn.hide();
     $('#welcome-header').hide();
+    $('sidebar-container').show();
     localStorage.setItem('code', getParameterByName('code'));
     localStorage.setItem('state', getParameterByName('state'));
+    //move logic to serverside
+    $.ajax({
+        type: "POST",
+        url: "https://accounts.spotify.com/api/token",
+        data: {
+            grant_type: "authorization_code",
+            code: localStorage.getItem('code'),
+            redirect_uri: "http://localhost:3000/",
+            client_id: 'c9ce30f810254abfa32846f44b5533cf',
+            client_secret: ""
+        },
+        success: function(info){
+        	console.log(info);
+        },
+        dataType: "json"
+    });
 }
