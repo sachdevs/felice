@@ -34,7 +34,7 @@ Since there is a need to validate all api calls in the app, my current solution 
 ##API Documentation
 
 | Endpoint  | HTTP Req  | Auth required  | Result  |
-|:-|:-|:-|:-|
+|---|---|---|---|
 |{root}/api/artists   |GET   |Standard   |List of artists   |
 |   |POST   |Admin   |Create Artist   |
 |{root}/api/artists/:artistId   |GET   |Standard   |Get artist    |
