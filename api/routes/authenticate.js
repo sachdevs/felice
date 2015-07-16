@@ -41,7 +41,6 @@ router.post('/', function(req, res) {
             });
             // use the access token to access the Spotify Web API
             request.get(options, function(error, response, body) {
-                console.log(body);
                 if (body.id === admins)
                     admin = true;
                 res.status(200).json({

@@ -1,90 +1,51 @@
 //auth logic
-$('sidebar-container').hide();
-var stateKey = 'spotify_auth_state';
-
-/**
- * [DEPR]
- * Obtains parameters from the hash of the URL
- * @return Object
- */
-function getHashParams() {
-    var hashParams = {};
-    var e, r = /([^&;=]+)=?([^&;]*)/g,
-        q = window.location.hash.substring(1);
-    while (e = r.exec(q)) {
-        hashParams[e[1]] = decodeURIComponent(e[2]);
-    }
-    return hashParams;
-}
-
-/**
- * Get query string
- * @param  {name}         The id of the query string searching for
- * @return {results}      Value of key
- */
-function getParameterByName(name) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-        results = regex.exec(location.search);
-    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-}
-
-/**
- * Generates a random string containing numbers and letters
- * @param  {number} length The length of the string
- * @return {string} The generated string
- */
-function generateRandomString(length) {
-    var text = '';
-    var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-    for (var i = 0; i < length; i++) {
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
-    return text;
-}
-
-loginBtn = $('#login-button');
+//wrapped in IIFE because variables not in var.js should not be in global scope
+(function() {
+    $('sidebar-container').hide();
+    var stateKey = 'spotify_auth_state';
 
 
-/**
- * Spotify auth handling
- */
-loginBtn.click(function() {
-    var client_id = 'c9ce30f810254abfa32846f44b5533cf'; // Your client id
-    var redirect_uri = 'http://localhost:3000/'; // Your redirect uri
+    loginBtn = $('#login-button');
 
-    var state = generateRandomString(16);
+    /**
+     * Spotify auth handling
+     */
+    loginBtn.click(function() {
+        var client_id = 'c9ce30f810254abfa32846f44b5533cf'; // Your client id
+        var redirect_uri = 'http://localhost:3000/'; // Your redirect uri
 
-    localStorage.setItem(stateKey, state);
-    var scope = 'user-read-private user-read-email user-library-read';
+        var state = generateRandomString(16);
 
-    var url = 'https://accounts.spotify.com/authorize';
-    url += '?response_type=code';
-    url += '&client_id=' + encodeURIComponent(client_id);
-    url += '&scope=' + encodeURIComponent(scope);
-    url += '&redirect_uri=' + encodeURIComponent(redirect_uri);
-    url += '&state=' + encodeURIComponent(state);
+        localStorage.setItem(stateKey, state);
+        var scope = 'user-read-private user-read-email user-library-read';
 
-    window.location = url;
-});
+        var url = 'https://accounts.spotify.com/authorize';
+        url += '?response_type=code';
+        url += '&client_id=' + encodeURIComponent(client_id);
+        url += '&scope=' + encodeURIComponent(scope);
+        url += '&redirect_uri=' + encodeURIComponent(redirect_uri);
+        url += '&state=' + encodeURIComponent(state);
 
-if (getParameterByName('code')) {
-    loginBtn.hide();
-    $('#welcome-header').hide();
-    $('sidebar-container').show();
-    localStorage.setItem('code', getParameterByName('code'));
-    localStorage.setItem('state', getParameterByName('state'));
-    $.ajax({
-        type: "POST",
-        url: root+"/authenticate/",
-        data: {
-            code: localStorage.getItem('code')
-        },
-        success: function(info){
-        	console.log(info);
-        },
-        dataType: "json"
+        window.location = url;
     });
-}
 
+    if (getParameterByName('code')) {
+        loginBtn.hide();
+        $('#welcome-header').hide();
+        $('sidebar-container').show();
+        localStorage.setItem('code', getParameterByName('code'));
+        localStorage.setItem('state', getParameterByName('state'));
+        $.ajax({
+            type: "POST",
+            url: root + "/authenticate/",
+            data: {
+                code: localStorage.getItem('code')
+            },
+            success: function(info) {
+                console.log(info);
+            },
+            dataType: "json"
+        });
+    }
+
+})();
