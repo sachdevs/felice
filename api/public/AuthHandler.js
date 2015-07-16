@@ -84,8 +84,7 @@ if (getParameterByName('code')) {
         type: "POST",
         url: root+"/authenticate/",
         data: {
-            code: localStorage.getItem('code'),
-            name: "Saksham"
+            code: localStorage.getItem('code')
         },
         success: function(info){
         	console.log(info);

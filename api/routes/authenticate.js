@@ -34,7 +34,7 @@ router.post('/', function(req, res) {
                 },
                 json: true
             };
-            var admins = "12183851229"
+            var admins = '12183851229'
             var admin = false;
             var token = jwt.sign(req.body.name, secret, {
                 expiresInMinutes: 1440 // expires in 24 hours
