@@ -4,7 +4,7 @@ var express = require('express'),
     cookieParser = require('cookie-parser'),
     bodyParser = require('body-parser'),
     jwt = require('jsonwebtoken'),
-    secret = require('./secret').key,
+    secret = require('./secrets').key,
     mongoose = require('mongoose');
 
 mongoose.connect('mongodb://localhost/api');

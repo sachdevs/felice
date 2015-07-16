@@ -80,16 +80,12 @@ if (getParameterByName('code')) {
     $('sidebar-container').show();
     localStorage.setItem('code', getParameterByName('code'));
     localStorage.setItem('state', getParameterByName('state'));
-    //move logic to serverside
     $.ajax({
         type: "POST",
-        url: "https://accounts.spotify.com/api/token",
+        url: root+"/authenticate/",
         data: {
-            grant_type: "authorization_code",
             code: localStorage.getItem('code'),
-            redirect_uri: "http://localhost:3000/",
-            client_id: 'c9ce30f810254abfa32846f44b5533cf',
-            client_secret: ""
+            name: "Saksham"
         },
         success: function(info){
         	console.log(info);
@@ -97,3 +93,4 @@ if (getParameterByName('code')) {
         dataType: "json"
     });
 }
+
