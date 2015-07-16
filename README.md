@@ -30,3 +30,24 @@ Since there is a need to validate all api calls in the app, my current solution 
 4. If invalid, 401 is issued <br>
 5. Users with elevated api access (admins) are (in a nutshell) supported through a list of white listed user profiles <br>
 6. Hopefully this does not have any major vulnerabilities. :crying_cat_face:
+
+##API Documentation
+
+| Endpoint  | HTTP Req  | Auth required  | Result  |
+|:-:|:-:|:-:|:-:|
+|{root}/api/artists   |GET   |Standard   |List of artists   |
+|   |POST   |Standard   |Create Artist   |
+|{root}/api/artists/:artistId   |GET   |Standard   |Get artist    |
+|   |PUT   |Standard   |Update artist   |
+|   |DELETE   |Admin   |Delete artist   |
+|{root}/api/users   |GET   |Standard   |List of users   |
+|   |POST   |Standard   |Create user   |
+|{root}/api/artists/:userId   |GET   |Standart   |Get user    |
+|   |PUT   |Standard   |Update user   |
+|   |DELETE   |Admin   |Delete user   |
+|{root}/api/tracks   |GET   |Standard   |List of tracks   |
+|   |POST   |Standard   |Create track   |
+|{root}/api/artists/:trackId   |GET   |Standard   |Get track    |
+|   |PUT   |Standard   |Update track   |
+|   |DELETE   |Admin   |Delete track   |
+|{root}/authenticate   |POST w/ authentication code   |Standard   |Returns jwt  |
