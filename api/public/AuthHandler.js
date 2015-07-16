@@ -44,11 +44,6 @@ function generateRandomString(length) {
     return text;
 }
 
-// var params = getHashParams();
-// var access_code = params.code,
-//     state = params.state,
-//     storedState = localStorage.getItem(stateKey);
-
 loginBtn = $('#login-button');
 
 
