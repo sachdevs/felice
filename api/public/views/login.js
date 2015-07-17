@@ -4,6 +4,9 @@ var LoginView = Backbone.View.extend({
         this.render();
     },
     render: function() {
+    	//covering edge case where user forcefully concatenates /#login to a random url
+    	$('.bs-sidebar').hide();
+
         var template = Handlebars.templates['login'];
         this.$el.html(template({}));
 
