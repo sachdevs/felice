@@ -3,11 +3,20 @@
     margin-bottom: 8px;
     background-color: black;
 }
+
 .bs-sidebar {
-	width: 40px;
-	height: 100%;
-	background-color: black;
+    width: 40px;
+    height: 100%;
+    background-color: black;
 }
+
 body {
-	background-color: #121212
+    background-color: #121212;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
 }
