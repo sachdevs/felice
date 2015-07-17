@@ -26,7 +26,6 @@ router.post('/', function(req, res) {
 
             var access_token = body.access_token,
                 refresh_token = body.refresh_token;
-
             var options = {
                 url: 'https://api.spotify.com/v1/me',
                 headers: {
@@ -36,7 +35,7 @@ router.post('/', function(req, res) {
             };
             var admins = '12183851229'
             var admin = false;
-            var token = jwt.sign(req.body.name, secret, {
+            var token = jwt.sign(body.access_token, secret, {
                 expiresInMinutes: 1440 // expires in 24 hours
             });
             // use the access token to access the Spotify Web API
@@ -48,7 +47,8 @@ router.post('/', function(req, res) {
                     refresh_token: refresh_token,
                     local_token: token,
                     local_token_time: 1440,
-                    admin: admin
+                    admin: admin,
+                    body: body
                 });
             });
         }
