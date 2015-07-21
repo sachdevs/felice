@@ -1,6 +1,7 @@
 var User = Backbone.Model.extend({
-    urlRoot: '/api/users',
-    idAttribute: 'userId',
+    url: function(){
+        return '/api/users'
+    },
     defaults: {
         userId: 'invalid',
         name: 'invalid',

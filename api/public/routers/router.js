@@ -7,7 +7,7 @@ var AppRouter = Backbone.Router.extend({
         "searchuser/:query": "search"
     },
     initialize: function() {
-    	//TEMP TODO should actually check for tokens not auth codes
+        //TEMP TODO should actually check for tokens not auth codes
         if (localStorage.getItem('code') || getParameterByName('code')) {
             if (getParameterByName('code')) {
                 localStorage.setItem('code', getParameterByName('code'));
@@ -19,15 +19,35 @@ var AppRouter = Backbone.Router.extend({
                 data: {
                     code: localStorage.getItem('code')
                 },
-                success: function(info) {
-                    console.log(info);
+                success: function(data) {
+                    console.log(data);
+                    var user = new User();
+                    user.save({
+                        userId: data.body.id || 'invalid',
+                        name: data.body.display_name || 'invalid',
+                        email: data.body.email || 'invalid',
+                        spotifyURI: data.body.uri || 'invalid',
+                        imageUrl: data.body.images[0].url || 'invalid',
+                        country: data.body.country || 'invalid',
+                        genreList: [],
+                        watchingList: [],
+                        token: data.local_token
+                    }, {
+                        success: function(model, response) {
+                            console.log('Successfully saved yayyy!');
+                        },
+                        error: function(model, error) {
+                            console.log(model.toJSON());
+                            console.log('error.responseText');
+                        }
+                    });
                 },
-                error: function(info){
-                	window.location = root + '/#login';
+                error: function(data) {
+                    window.location = root + '/#login';
                 },
                 dataType: "json"
-            }).done(function(){
-            	this.sidebarView = new SidebarView();
+            }).done(function() {
+                this.sidebarView = new SidebarView();
             });
         }
         else {
