@@ -39,3 +39,39 @@ function generateRandomString(length) {
     }
     return text;
 }
+/**
+ * save user's saved tracks to db
+ * @param  {String} spotify_token   spotify auth token
+ * @param  {String} local_token     local api auth token
+ * @param  {Function} callback
+ * @return {void}
+ */
+function saveTracks(spotify_token, local_token, callback){
+    getTrackList(spotify_token, function(){
+        callback("done");
+    });
+}
+
+function getTrackList(spotify_token, callback){
+    var songList = [];
+    var nextUrl = ['https://api.spotify.com/v1/me/tracks?limit=50'];
+    for(i = 0; i < 2; i++){
+        (function(songList, nextUrl, i){
+            console.log(nextUrl[i]);
+            $.ajax({
+                url: nextUrl[i] || 'https://api.spotify.com/v1/me/tracks?limit=50',
+                headers: {
+                    'Authorization': 'Bearer ' + spotify_token
+                },
+                success: function(tracks) {
+                    songList.push(tracks);
+                    nextUrl.push(tracks.next);
+                    if(!nextUrl[i+1]){
+                        callback(songList);
+                        console.log(songList);
+                    }
+                }
+            });
+        })(songList, nextUrl, i);
+    }
+}
