@@ -39,6 +39,7 @@ function generateRandomString(length) {
     }
     return text;
 }
+
 /**
  * save user's saved tracks to db
  * @param  {String} spotify_token   spotify auth token
@@ -46,32 +47,39 @@ function generateRandomString(length) {
  * @param  {Function} callback
  * @return {void}
  */
-function saveTracks(spotify_token, local_token, callback){
-    getTrackList(spotify_token, function(){
-        callback("done");
-    });
+function saveTracks(spotify_token, local_token, callback) {
+    var list = [];
+    fetchSavedTracks(function(data) {
+        list.push(data.tracks);
+        console.log(list);
+        while (data.tracks.next) {
+            (function(list){
+                callSpotify(data.tracks.next, {}, function(tracks) {
+                    list.push(tracks);
+                    console.log(list);
+                });
+            })(list);
+        }
+    }, spotify_token);
 }
 
-function getTrackList(spotify_token, callback){
-    var songList = [];
-    var nextUrl = ['https://api.spotify.com/v1/me/tracks?limit=50'];
-    for(i = 0; i < 2; i++){
-        (function(songList, nextUrl, i){
-            console.log(nextUrl[i]);
-            $.ajax({
-                url: nextUrl[i] || 'https://api.spotify.com/v1/me/tracks?limit=50',
-                headers: {
-                    'Authorization': 'Bearer ' + spotify_token
-                },
-                success: function(tracks) {
-                    songList.push(tracks);
-                    nextUrl.push(tracks.next);
-                    if(!nextUrl[i+1]){
-                        callback(songList);
-                        console.log(songList);
-                    }
-                }
-            });
-        })(songList, nextUrl, i);
-    }
+function fetchSavedTracks(callback, access_token) {
+    var url = 'https://api.spotify.com/v1/me/tracks';
+    callSpotify(url, {}, access_token, callback);
+}
+
+function callSpotify(url, data, access_token, callback) {
+    $.ajax(url, {
+        dataType: 'json',
+        data: data,
+        headers: {
+            'Authorization': 'Bearer ' + access_token
+        },
+        success: function(r) {
+            callback(r);
+        },
+        error: function(r) {
+            callback(null);
+        }
+    });
 }
