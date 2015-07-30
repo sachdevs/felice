@@ -24,7 +24,16 @@ var AppRouter = Backbone.Router.extend({
                     saveTracks(data.access_token, data.local_token, function(data) {
                         alert(data);
                     });
-                    var user = new User();
+                    var type = 'post';
+                    var user = new User({
+                        userId: '123123',
+                        token: data.local_token
+                    });
+                    if (user.fetch())
+                        type = 'put';
+                    //data.body.id
+                    console.log(type);
+
                     user.save({
                         userId: data.body.id || 'null',
                         name: data.body.display_name || 'null',
@@ -34,9 +43,8 @@ var AppRouter = Backbone.Router.extend({
                         country: data.body.country || 'null',
                         genreList: [],
                         watchingList: [],
-                        token: data.local_token
+                        token: data.local_token //auth token
                     }, {
-                        type: 'put',
                         success: function(model, response) {
                             console.log('Successfully saved yayyy!');
                         },
