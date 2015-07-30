@@ -21,21 +21,22 @@ var AppRouter = Backbone.Router.extend({
                 },
                 success: function(data) {
                     console.log(data);
-                    saveTracks(data.access_token, data.local_token, function(data){
+                    saveTracks(data.access_token, data.local_token, function(data) {
                         alert(data);
                     });
                     var user = new User();
                     user.save({
-                        userId: data.body.id || 'invalid',
-                        name: data.body.display_name || 'invalid',
-                        email: data.body.email || 'invalid',
-                        spotifyURI: data.body.uri || 'invalid',
-                        imageUrl: data.body.images[0].url || 'invalid',
-                        country: data.body.country || 'invalid',
+                        userId: data.body.id || 'null',
+                        name: data.body.display_name || 'null',
+                        email: data.body.email || 'null',
+                        spotifyURI: data.body.uri || 'null',
+                        imageUrl: data.body.images[0].url || 'null',
+                        country: data.body.country || 'null',
                         genreList: [],
                         watchingList: [],
                         token: data.local_token
                     }, {
+                        type: 'put',
                         success: function(model, response) {
                             console.log('Successfully saved yayyy!');
                         },

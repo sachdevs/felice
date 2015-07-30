@@ -49,23 +49,19 @@ function generateRandomString(length) {
  */
 function saveTracks(spotify_token, local_token, callback) {
     var list = [];
-    fetchSavedTracks(function(data) {
-        list.push(data.tracks);
-        console.log(list);
-        while (data.tracks.next) {
-            (function(list){
-                callSpotify(data.tracks.next, {}, function(tracks) {
-                    list.push(tracks);
+    var url = 'https://api.spotify.com/v1/me/tracks?limit=50';
+    callSpotify(url, {}, spotify_token, function(t){
+        list = list.concat(t.items);
+        for(i = 1; i < Math.ceil(t.total/50); i++){
+            (function(i, list){
+                callSpotify(url+"&offset="+(50*i), {}, spotify_token, function(tracks){
+                    list = list.concat(tracks.items);
                     console.log(list);
+                    callback(list);
                 });
-            })(list);
+            })(i, list);
         }
-    }, spotify_token);
-}
-
-function fetchSavedTracks(callback, access_token) {
-    var url = 'https://api.spotify.com/v1/me/tracks';
-    callSpotify(url, {}, access_token, callback);
+    });
 }
 
 function callSpotify(url, data, access_token, callback) {

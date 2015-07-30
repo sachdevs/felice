@@ -10,6 +10,7 @@ var User = Backbone.Model.extend({
         imageUrl: 'invalid',
         country: 'invalid',
         genreList: [],
-        watchingList: []
+        watchingList: [],
+        id: null
     }
 });
