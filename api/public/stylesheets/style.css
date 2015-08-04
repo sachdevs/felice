@@ -5,9 +5,14 @@
 }
 
 .bs-sidebar {
-    width: 40px;
+    width: 60px;
     height: 100%;
     background-color: black;
+}
+
+.svg-icon {
+    width: 40px;
+    height: 40px;
 }
 
 body {
