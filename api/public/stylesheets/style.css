@@ -1,18 +1,32 @@
 .bs-sidebar .nav > .active > ul {
     display: block;
     margin-bottom: 8px;
-    background-color: black;
+    overflow: hidden;
 }
 
 .bs-sidebar {
-    width: 60px;
+    width: 70px;
     height: 100%;
     background-color: black;
 }
 
 .svg-icon {
+    margin: 25px;
+    margin-left: 10px;
     width: 40px;
     height: 40px;
+}
+
+#mainlogo {
+    width: 150px;
+    height: 70px;
+    margin: 0;
+    margin-top: 15px;
+}
+
+.sidebar-icon-container {
+    display: inline-block;
+    width: 170px;
 }
 
 body {
