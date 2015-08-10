@@ -42,7 +42,7 @@ router.get('/', function(req, res) {
 
 router.post('/', function(req, res) {
     var user = new User();
-    user.userId = req.body.userId;
+    user.userId = req.body.userId || req.body.dumpId;
     user.name = req.body.name;
     user.email = req.body.email;
     user.spotifyURI = req.body.spotifyURI;

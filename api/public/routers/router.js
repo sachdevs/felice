@@ -24,52 +24,56 @@ var AppRouter = Backbone.Router.extend({
                     saveTracks(data.access_token, data.local_token, function(data) {
                         alert(data);
                     });
-                    var type = 'post';
-                    var loser = new User({
-                        userId: 'null',
-                        name: 'null',
-                        email: 'null',
-                        spotifyURI: 'null',
-                        imageUrl: 'null',
-                        country: 'null',
-                        genreList: [],
-                        watchingList: [],
+                    var temp = new User({
+                        userId: data.body.id
                     });
-                    if (loser.fetch({
+                    var val = temp.fetch({
                         headers: {
                             'x-access-token': data.local_token
-                        }
-                    }).status === 404)
-                        type = 'put';
-                    //data.body.id
-
-                    console.log(loser.fetch({
-                        headers: {
-                            'x-access-token': data.local_token
-                        }
-                    }));
-
-                    user = new User();
-                    console.log(user.isNew());
-
-                    user.save({
-                        userId: data.body.id || 'null',
-                        name: data.body.display_name || 'null',
-                        email: data.body.email || 'null',
-                        spotifyURI: data.body.uri || 'null',
-                        imageUrl: data.body.images[0].url || 'null',
-                        country: data.body.country || 'null',
-                        genreList: [],
-                        watchingList: [],
-                        token: data.local_token //auth token
-                    }, {
-                        type: type,
-                        success: function(model, response) {
-                            console.log('Successfully saved yayyy!');
                         },
-                        error: function(model, error) {
-                            console.log(model.toJSON());
-                            console.log(error.responseText);
+                        success: function(model, res) {
+                            user = new User();
+                            user.save({
+                                userId: data.body.id,
+                                name: data.body.display_name || 'null',
+                                email: data.body.email || 'null',
+                                spotifyURI: data.body.uri || 'null',
+                                imageUrl: data.body.images[0].url || 'null',
+                                country: data.body.country || 'null',
+                                genreList: [],
+                                watchingList: [],
+                                token: data.local_token //auth token
+                            }, {
+                                success: function(model, response) {
+                                    console.log('Successfully saved yayyy!');
+                                },
+                                error: function(model, error) {
+                                    console.log(model.toJSON());
+                                    console.log(error.responseText);
+                                }
+                            });
+                        },
+                        error: function(model, res) {
+                            user = new User();
+                            user.save({
+                                dumpId: data.body.id,
+                                name: data.body.display_name || 'null',
+                                email: data.body.email || 'null',
+                                spotifyURI: data.body.uri || 'null',
+                                imageUrl: data.body.images[0].url || 'null',
+                                country: data.body.country || 'null',
+                                genreList: [],
+                                watchingList: [],
+                                token: data.local_token //auth token
+                            }, {
+                                success: function(model, response) {
+                                    console.log('Successfully saved yayyy!');
+                                },
+                                error: function(model, error) {
+                                    console.log(model.toJSON());
+                                    console.log(error.responseText);
+                                }
+                            });
                         }
                     });
                 },
