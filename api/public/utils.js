@@ -50,11 +50,11 @@ function generateRandomString(length) {
 function saveTracks(spotify_token, local_token, callback) {
     var list = [];
     var url = 'https://api.spotify.com/v1/me/tracks?limit=50';
-    callSpotify(url, {}, spotify_token, function(t){
+    callSpotify(url, {}, spotify_token, function(t) {
         list = list.concat(t.items);
-        for(i = 1; i < Math.ceil(t.total/50); i++){
-            (function(i, list){
-                callSpotify(url+"&offset="+(50*i), {}, spotify_token, function(tracks){
+        for (i = 1; i < Math.ceil(t.total / 50); i++) {
+            (function(i, list) {
+                callSpotify(url + "&offset=" + (50 * i), {}, spotify_token, function(tracks) {
                     list = list.concat(tracks.items);
                     console.log(list);
                     callback(list);
@@ -76,6 +76,35 @@ function callSpotify(url, data, access_token, callback) {
         },
         error: function(r) {
             callback(null);
+        }
+    });
+}
+
+function saveUser(data, deleteUserId) {
+    user = new User();
+    obj = {
+        userId: data.body.id,
+        dumpId: data.body.id,
+        name: data.body.display_name || 'null',
+        email: data.body.email || 'null',
+        spotifyURI: data.body.uri || 'null',
+        imageUrl: data.body.images[0].url || 'null',
+        country: data.body.country || 'null',
+        genreList: [],
+        watchingList: [],
+        token: data.local_token //auth token
+    };
+    if(deleteUserId)
+        delete obj.userId;
+    else
+        delete obj.dumpId;
+    user.save(obj, {
+        success: function(model, response) {
+            console.log('Successfully saved yayyy!');
+        },
+        error: function(model, error) {
+            console.log(model.toJSON());
+            console.log(error.responseText);
         }
     });
 }

@@ -32,48 +32,10 @@ var AppRouter = Backbone.Router.extend({
                             'x-access-token': data.local_token
                         },
                         success: function(model, res) {
-                            user = new User();
-                            user.save({
-                                userId: data.body.id,
-                                name: data.body.display_name || 'null',
-                                email: data.body.email || 'null',
-                                spotifyURI: data.body.uri || 'null',
-                                imageUrl: data.body.images[0].url || 'null',
-                                country: data.body.country || 'null',
-                                genreList: [],
-                                watchingList: [],
-                                token: data.local_token //auth token
-                            }, {
-                                success: function(model, response) {
-                                    console.log('Successfully saved yayyy!');
-                                },
-                                error: function(model, error) {
-                                    console.log(model.toJSON());
-                                    console.log(error.responseText);
-                                }
-                            });
+                            saveUser(data, false);
                         },
                         error: function(model, res) {
-                            user = new User();
-                            user.save({
-                                dumpId: data.body.id,
-                                name: data.body.display_name || 'null',
-                                email: data.body.email || 'null',
-                                spotifyURI: data.body.uri || 'null',
-                                imageUrl: data.body.images[0].url || 'null',
-                                country: data.body.country || 'null',
-                                genreList: [],
-                                watchingList: [],
-                                token: data.local_token //auth token
-                            }, {
-                                success: function(model, response) {
-                                    console.log('Successfully saved yayyy!');
-                                },
-                                error: function(model, error) {
-                                    console.log(model.toJSON());
-                                    console.log(error.responseText);
-                                }
-                            });
+                            saveUser(data, true);
                         }
                     });
                 },
