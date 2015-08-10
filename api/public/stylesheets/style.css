@@ -17,6 +17,11 @@
     height: 40px;
 }
 
+#divider {
+    width: 100%;
+    height: 3px;
+}
+
 #mainlogo {
     width: 150px;
     height: 70px;
