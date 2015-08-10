@@ -1,9 +1,8 @@
 var User = Backbone.Model.extend({
-    url: function(){
-        return '/api/users'
-    },
+    urlRoot: root + '/api/users',
+    idAttribute: 'userId',
     defaults: {
-        userId: 'invalid',
+        userId: null,
         name: 'invalid',
         email: 'invalid',
         spotifyURI: 'invalid',
@@ -12,4 +11,9 @@ var User = Backbone.Model.extend({
         genreList: [],
         watchingList: []
     }
+});
+
+var Users = Backbone.Collection.extend({
+    url: '/api/users',
+    model: User
 });
