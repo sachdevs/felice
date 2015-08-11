@@ -44,11 +44,40 @@ function generateRandomString(length) {
 function saveTracks(data) {
     getTracks(data.access_token, data.local_token, function(songinfo) {
         var dateAndIdArr = [];
-        for(var i = 0; i < songinfo.length; i++){
+        for (var i = 0; i < songinfo.length; i++) {
+            //localstorage date data logic
             var dateAndIdObj = {};
             dateAndIdObj.date = songinfo[i].added_at;
-            dateAndIdObj.songId = songinfo[i].track.id;
+            dateAndIdObj.trackId = songinfo[i].track.id;
             dateAndIdArr.push(dateAndIdObj);
+
+            (function() {
+                //actually saving tracks to db
+                var track = new Track();
+                var trackobj = {
+                    name: songinfo[i].track.name,
+                    trackId: songinfo[i].track.id,
+                    genreList: [],
+                    artist: songinfo[i].track.artists[0].name,
+                    artistId: songinfo[i].track.artists[0].id,
+                    album: songinfo[i].track.album.name,
+                    popularity: songinfo[i].track.popularity,
+                    duration_ms: songinfo[i].track.duration_ms,
+                    explicit: songinfo[i].track.explicit,
+                    preview_url: songinfo[i].track.preview_url,
+                    similar: [],
+                    token: data.local_token
+                };
+                track.save(trackobj, {
+                    success: function(model, response) {
+                        console.log('Successfully saved tracks yayyy!');
+                    },
+                    error: function(model, error) {
+                        console.log(model.toJSON());
+                        console.log(error.responseText);
+                    }
+                });
+            })();
         }
         console.log(dateAndIdArr);
         localStorage.setItem('songData', JSON.stringify(dateAndIdArr));
@@ -96,8 +125,8 @@ function callSpotify(url, data, access_token, callback) {
 }
 
 function saveUser(data) {
-    user = new User();
-    obj = {
+    var user = new User();
+    var obj = {
         userId: data.body.id,
         name: data.body.display_name || 'null',
         email: data.body.email || 'null',
