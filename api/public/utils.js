@@ -80,11 +80,10 @@ function callSpotify(url, data, access_token, callback) {
     });
 }
 
-function saveUser(data, deleteUserId) {
+function saveUser(data) {
     user = new User();
     obj = {
         userId: data.body.id,
-        dumpId: data.body.id,
         name: data.body.display_name || 'null',
         email: data.body.email || 'null',
         spotifyURI: data.body.uri || 'null',
@@ -94,10 +93,6 @@ function saveUser(data, deleteUserId) {
         watchingList: [],
         token: data.local_token //auth token
     };
-    if(deleteUserId)
-        delete obj.userId;
-    else
-        delete obj.dumpId;
     user.save(obj, {
         success: function(model, response) {
             console.log('Successfully saved yayyy!');

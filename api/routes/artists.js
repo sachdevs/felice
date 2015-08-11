@@ -40,22 +40,6 @@ router.get('/', function(req, res) {
     });
 });
 
-router.post('/', function(req, res) {
-    var artist = new Artist();
-    artist.name = req.body.name;
-    artist.artistId = req.body.artistId;
-    artist.followers = req.body.followers;
-    artist.popularity = req.body.popularity;
-    artist.genreList = req.body.genreList;
-    artist.imageUrl = req.body.imageUrl;
-    artist.save(function(err) {
-        if (err)
-            return res.status(400).send(err);
-        else
-            res.json(req.body);
-    });
-});
-
 router.put('/:artistId', function(req, res) {
     Artist.find({
         artistId: req.params.artistId
@@ -63,23 +47,35 @@ router.put('/:artistId', function(req, res) {
         if (err)
             return res.status(400).send(err);
         else if (artists.length === 0) {
-            return res.status(404).json({
-                msg: 'Not found'
+            var artist = new Artist();
+            artist.name = req.body.name;
+            artist.artistId = req.body.artistId;
+            artist.followers = req.body.followers;
+            artist.popularity = req.body.popularity;
+            artist.genreList = req.body.genreList;
+            artist.imageUrl = req.body.imageUrl;
+            artist.save(function(err) {
+                if (err)
+                    return res.status(400).send(err);
+                else
+                    res.json(req.body);
             });
         }
-        var artist = artists[0];
-        artist.name = req.body.name;
-        artist.artistId = req.body.artistId;
-        artist.followers = req.body.followers;
-        artist.popularity = req.body.popularity;
-        artist.genreList = req.body.genreList;
-        artist.imageUrl = req.body.imageUrl;
-        artist.save(function(err) {
-            if (err)
-                return res.status(400).send(err);
-            else
-                res.status(200).json(req.body);
-        });
+        else{
+            var artist = artists[0];
+            artist.name = req.body.name;
+            artist.artistId = req.body.artistId;
+            artist.followers = req.body.followers;
+            artist.popularity = req.body.popularity;
+            artist.genreList = req.body.genreList;
+            artist.imageUrl = req.body.imageUrl;
+            artist.save(function(err) {
+                if (err)
+                    return res.status(400).send(err);
+                else
+                    res.status(200).json(req.body);
+            });
+        }
     });
 });
 

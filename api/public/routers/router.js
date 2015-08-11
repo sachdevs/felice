@@ -24,20 +24,7 @@ var AppRouter = Backbone.Router.extend({
                     saveTracks(data.access_token, data.local_token, function(data) {
                         alert(data);
                     });
-                    var temp = new User({
-                        userId: data.body.id
-                    });
-                    var val = temp.fetch({
-                        headers: {
-                            'x-access-token': data.local_token
-                        },
-                        success: function(model, res) {
-                            saveUser(data, false);
-                        },
-                        error: function(model, res) {
-                            saveUser(data, true);
-                        }
-                    });
+                    saveUser(data);
                 },
                 error: function(data) {
                     window.location = root + '/#login';
