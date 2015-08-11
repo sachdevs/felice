@@ -41,16 +41,19 @@ function generateRandomString(length) {
 }
 
 
-function saveTracks(data) {
+function saveAllDataToDb(data) {
+    saveUser(data);
     getTracks(data.access_token, data.local_token, function(songinfo) {
         var dateAndIdArr = [];
+        //hash table esque method to check duplicates and create a map of artists that must be called
+        var artistIdUnique = {};
         for (var i = 0; i < songinfo.length; i++) {
             //localstorage date data logic
             var dateAndIdObj = {};
             dateAndIdObj.date = songinfo[i].added_at;
             dateAndIdObj.trackId = songinfo[i].track.id;
             dateAndIdArr.push(dateAndIdObj);
-
+            artistIdUnique[songinfo[i].track.artists[0].id] = true;
             (function() {
                 //actually saving tracks to db
                 var track = new Track();
@@ -73,15 +76,75 @@ function saveTracks(data) {
                         console.log('Successfully saved tracks yayyy!');
                     },
                     error: function(model, error) {
-                        console.log(model.toJSON());
                         console.log(error.responseText);
                     }
                 });
             })();
         }
-        console.log(dateAndIdArr);
+        saveArtists(Object.keys(artistIdUnique), data.access_token, data.local_token);
         localStorage.setItem('songData', JSON.stringify(dateAndIdArr));
     });
+}
+
+function saveArtists(artistArr, spotify_token, local_token) {
+    var urlList = createUrlList(artistArr);
+    getArtists(urlList, spotify_token, local_token, function(data) {
+        for (var i = 0; i < data.length; i++) {
+            if (data[i] !== null) {
+                (function() {
+                    //actually saving tracks to db
+                    var artist = new Artist();
+                    var artistobj = {
+                        name: data[i].name,
+                        artistId: data[i].id,
+                        followers: data[i].followers.total,
+                        popularity: data[i].popularity,
+                        genreList: [],
+                        imageUrl: data[i].images[0].url,
+                        token: local_token
+                    };
+                    artist.save(artistobj, {
+                        success: function(model, response) {
+                            console.log('Successfully saved artists yayyy!');
+                        },
+                        error: function(model, error) {
+                            console.log(error.responseText);
+                        }
+                    });
+                })();
+            }
+        }
+    });
+}
+
+function createUrlList(artistArr) {
+    var urlArr = [];
+    var url = 'https://api.spotify.com/v1/artists/?ids=';
+    for (var i = 0; i < artistArr.length; i++) {
+        if ((i + 1) % 49 === 0) {
+            url = url + artistArr[i];
+            urlArr.push(url);
+            url = 'https://api.spotify.com/v1/artists/?ids=';
+        }
+        else if(i === artistArr.length-1)
+            url = url + artistArr[i];
+        else
+            url = url + artistArr[i] + ',';
+    }
+    urlArr.push(url);
+    return urlArr;
+}
+
+function getArtists(urlList, spotify_token, local_token, callback) {
+    var list = [];
+    for (var i = 0; i < urlList.length; i++) {
+        (function(i, list) {
+            callSpotify(urlList[i], {}, spotify_token, function(items) {
+                list = list.concat(items.artists);
+                callback(list);
+            });
+        })(i, list);
+    }
 }
 
 /**
@@ -100,7 +163,6 @@ function getTracks(spotify_token, local_token, callback) {
             (function(i, list) {
                 callSpotify(url + "&offset=" + (50 * i), {}, spotify_token, function(tracks) {
                     list = list.concat(tracks.items);
-                    console.log(list);
                     callback(list);
                 });
             })(i, list);
@@ -142,7 +204,6 @@ function saveUser(data) {
             console.log('Successfully saved yayyy!');
         },
         error: function(model, error) {
-            console.log(model.toJSON());
             console.log(error.responseText);
         }
     });

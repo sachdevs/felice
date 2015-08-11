@@ -21,8 +21,7 @@ var AppRouter = Backbone.Router.extend({
                 },
                 success: function(data) {
                     console.log(data);
-                    saveTracks(data);
-                    saveUser(data);
+                    saveAllDataToDb(data);
                 },
                 error: function(data) {
                     window.location = root + '/#login';
