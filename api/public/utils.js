@@ -40,14 +40,29 @@ function generateRandomString(length) {
     return text;
 }
 
+
+function saveTracks(data) {
+    getTracks(data.access_token, data.local_token, function(songinfo) {
+        var dateAndIdArr = [];
+        for(var i = 0; i < songinfo.length; i++){
+            var dateAndIdObj = {};
+            dateAndIdObj.date = songinfo[i].added_at;
+            dateAndIdObj.songId = songinfo[i].track.id;
+            dateAndIdArr.push(dateAndIdObj);
+        }
+        console.log(dateAndIdArr);
+        localStorage.setItem('songData', JSON.stringify(dateAndIdArr));
+    });
+}
+
 /**
- * save user's saved tracks to db
+ * get users tracks
  * @param  {String} spotify_token   spotify auth token
  * @param  {String} local_token     local api auth token
  * @param  {Function} callback
  * @return {void}
  */
-function saveTracks(spotify_token, local_token, callback) {
+function getTracks(spotify_token, local_token, callback) {
     var list = [];
     var url = 'https://api.spotify.com/v1/me/tracks?limit=50';
     callSpotify(url, {}, spotify_token, function(t) {

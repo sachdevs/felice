@@ -21,9 +21,7 @@ var AppRouter = Backbone.Router.extend({
                 },
                 success: function(data) {
                     console.log(data);
-                    saveTracks(data.access_token, data.local_token, function(data) {
-                        alert(data);
-                    });
+                    saveTracks(data);
                     saveUser(data);
                 },
                 error: function(data) {
