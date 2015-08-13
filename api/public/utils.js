@@ -199,6 +199,14 @@ function getTracks(spotify_token, local_token, callback) {
     });
 }
 
+function checkExistenceImage(obj, property){
+    if(obj.hasOwnProperty(property)){
+        return obj.images[0].url;
+    }
+    else
+        return undefined;
+}
+
 /**
  * Saves user
  * @param  {Object} data      from felice api
@@ -211,7 +219,7 @@ function saveUser(data) {
         name: data.body.display_name || 'null',
         email: data.body.email || 'null',
         spotifyURI: data.body.uri || 'null',
-        imageUrl: data.body.images[0].url || 'null',
+        imageUrl: checkExistenceImage(data.body, 'images') || 'null',
         country: data.body.country || 'null',
         genreList: [],
         watchingList: [],
