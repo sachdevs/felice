@@ -111,12 +111,12 @@ function saveArtists(artistArr, spotify_token, local_token) {
                     //actually saving tracks to db
                     var artist = new Artist();
                     var artistobj = {
-                        name: data[i].name,
-                        artistId: data[i].id,
+                        name: safeObjectAccess(data[i], 'name'),
+                        artistId: safeObjectAccess(data[i], 'id'),
                         followers: data[i].followers.total,
-                        popularity: data[i].popularity,
+                        popularity: safeObjectAccess(data[i], 'popularity'),
                         genreList: [],
-                        imageUrl: data[i].images[0].url,
+                        imageUrl: JSON.stringify(safeObjectAccess(data[i], 'images')),
                         token: local_token
                     };
                     artist.save(artistobj, {
@@ -199,12 +199,13 @@ function getTracks(spotify_token, local_token, callback) {
     });
 }
 
-function checkExistenceImage(obj, property){
-    if(obj.hasOwnProperty(property)){
-        return obj.images[0].url;
+function safeObjectAccess(obj, elementToAccess){
+    try{
+        return obj[elementToAccess];
     }
-    else
-        return undefined;
+    catch(e){
+        return null;
+    }
 }
 
 /**
@@ -215,12 +216,12 @@ function checkExistenceImage(obj, property){
 function saveUser(data) {
     var user = new User();
     var obj = {
-        userId: data.body.id,
-        name: data.body.display_name || 'null',
-        email: data.body.email || 'null',
-        spotifyURI: data.body.uri || 'null',
-        imageUrl: checkExistenceImage(data.body, 'images') || 'null',
-        country: data.body.country || 'null',
+        userId: safeObjectAccess(data.body, 'id'),
+        name: safeObjectAccess(data.body, 'display_name'),
+        email: safeObjectAccess(data.body, 'email'),
+        spotifyURI: safeObjectAccess(data.body, 'uri'),
+        imageUrl: JSON.stringify(safeObjectAccess(data.body, 'images')),
+        country: safeObjectAccess(data.body, 'country'),
         genreList: [],
         watchingList: [],
         token: data.local_token //auth token
