@@ -48,56 +48,63 @@ function generateRandomString(length) {
 function saveAllDataToDb(data) {
     saveUser(data);
     getTracks(data.access_token, data.local_token, function(songinfo) {
-        var dateAndIdArr = [];
-        //hash table esque method to check duplicates and create a map of artists that must be called
-        var artistIdUnique = {};
-        for (var i = 0; i < songinfo.length; i++) {
-            //localstorage date data logic
-            var dateAndIdObj = {};
-            dateAndIdObj.date = songinfo[i].added_at;
-            dateAndIdObj.trackId = songinfo[i].track.id;
-            dateAndIdArr.push(dateAndIdObj);
-            (function(i) {
-                getEchonestGenres(songinfo[i].track.artists[0].id, data.local_token, artistIdUnique, function(genres) {
-                    artistIdUnique[songinfo[i].track.artists[0].id] = genres;
-                    //actually saving tracks to db
-                    var track = new Track();
-                    //make a list genre list here and put it in artistIdUnique obj
-                    //modify save artists to use artistIdUnique to get genreList (thereby minimizing api calls to echonest)
-                    //somehow figure out what to do when more than 120 songs need to be gotten genres for
-                    //leave when more than 120 songs, check db for the rest
-                    //put only if doesnt exist is probably the better option
-                    var trackobj = {
-                        name: songinfo[i].track.name,
-                        trackId: songinfo[i].track.id,
-                        genreList: genres,
-                        artist: songinfo[i].track.artists[0].name,
-                        artistId: songinfo[i].track.artists[0].id,
-                        album: songinfo[i].track.album.name,
-                        popularity: songinfo[i].track.popularity,
-                        duration_ms: songinfo[i].track.duration_ms,
-                        explicit: songinfo[i].track.explicit,
-                        preview_url: songinfo[i].track.preview_url,
-                        similar: [],
-                        token: data.local_token
-                    };
-                    (function() {
-                        track.save(trackobj, {
-                            success: function(model, response) {
-                                console.log('Successfully saved tracks yayyy!');
-                            },
-                            error: function(model, error) {
-                                console.log(error.responseText);
-                            }
-                        });
-                    })();
-                    if (i === songinfo.length - 1)
-                        saveArtists(Object.keys(artistIdUnique), artistIdUnique, data.access_token, data.local_token);
-                });
-            })(i);
-        }
-        localStorage.setItem('songData', JSON.stringify(dateAndIdArr));
+        // var dateAndIdArr = [];
+        // //hash table esque method to check duplicates and create a map of artists that must be called
+        // var artistIdUnique = {};
+        // for (var i = 0; i < songinfo.length; i++) {
+        //     //localstorage date data logic
+        //     var dateAndIdObj = {};
+        //     dateAndIdObj.date = songinfo[i].added_at;
+        //     dateAndIdObj.trackId = songinfo[i].track.id;
+        //     dateAndIdArr.push(dateAndIdObj);
+        //     (function(i) {
+        //         getEchonestGenres(songinfo[i].track.artists[0].id, data.local_token, artistIdUnique, function(genres) {
+        //             artistIdUnique[songinfo[i].track.artists[0].id] = genres;
+        //             if (i === songinfo.length - 1) {
+        //                 saveTracks(artistIdUnique, songinfo, data.local_token);
+        //                 saveArtists(Object.keys(artistIdUnique), artistIdUnique, data.access_token, data.local_token);
+        //             }
+        //         });
+        //     })(i);
+        // }
+        // localStorage.setItem('songData', JSON.stringify(dateAndIdArr));
     });
+}
+
+function saveTracks(artistObj, songinfo, local_token) {
+    for (var i = 0; i < songinfo.length; i++) {
+        //actually saving tracks to db
+        var track = new Track();
+        //make a list genre list here and put it in artistIdUnique obj
+        //modify save artists to use artistIdUnique to get genreList (thereby minimizing api calls to echonest)
+        //somehow figure out what to do when more than 120 songs need to be gotten genres for
+        //leave when more than 120 songs, check db for the rest
+        //put only if doesnt exist is probably the better option
+        var trackobj = {
+            name: songinfo[i].track.name,
+            trackId: songinfo[i].track.id,
+            genreList: artistObj[songinfo[i].track.artists[0].id],
+            artist: songinfo[i].track.artists[0].name,
+            artistId: songinfo[i].track.artists[0].id,
+            album: songinfo[i].track.album.name,
+            popularity: songinfo[i].track.popularity,
+            duration_ms: songinfo[i].track.duration_ms,
+            explicit: songinfo[i].track.explicit,
+            preview_url: songinfo[i].track.preview_url,
+            similar: [],
+            token: local_token
+        };
+        (function() {
+            track.save(trackobj, {
+                success: function(model, response) {
+                    console.log('Successfully saved tracks yayyy!');
+                },
+                error: function(model, error) {
+                    console.log(error.responseText);
+                }
+            });
+        })();
+    }
 }
 
 /**
@@ -193,11 +200,17 @@ function getTracks(spotify_token, local_token, callback) {
     var url = 'https://api.spotify.com/v1/me/tracks?limit=50';
     callSpotify(url, {}, spotify_token, function(t) {
         list = list.concat(t.items);
+        console.log(list.length);
         for (i = 1; i < Math.ceil(t.total / 50); i++) {
             (function(i, list) {
                 callSpotify(url + "&offset=" + (50 * i), {}, spotify_token, function(tracks) {
                     list = list.concat(tracks.items);
-                    callback(list);
+                    console.log(list.length);
+                    if(i === Math.ceil(t.total / 50)-1){
+                        console.log(t.total);
+                        console.log(list);
+                        callback(list);
+                    }
                 });
             })(i, list);
         }
