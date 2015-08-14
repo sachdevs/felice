@@ -58,7 +58,7 @@ function saveAllDataToDb(data) {
             dateAndIdObj.trackId = songinfo[i].track.id;
             dateAndIdArr.push(dateAndIdObj);
             (function(i) {
-                getEchonestGenres(songinfo[i].track.artists[0].id, artistIdUnique, function(genres) {
+                getEchonestGenres(songinfo[i].track.artists[0].id, data.local_token, artistIdUnique, function(genres) {
                     artistIdUnique[songinfo[i].track.artists[0].id] = genres;
                     //actually saving tracks to db
                     var track = new Track();
@@ -91,7 +91,7 @@ function saveAllDataToDb(data) {
                             }
                         });
                     })();
-                    if(i === songinfo.length-1)
+                    if (i === songinfo.length - 1)
                         saveArtists(Object.keys(artistIdUnique), artistIdUnique, data.access_token, data.local_token);
                 });
             })(i);
@@ -241,17 +241,34 @@ function saveUser(data) {
     });
 }
 
-function getEchonestGenres(spotify_id, artistObj, callback) {
+function getEchonestGenres(spotify_id, local_token, artistObj, callback) {
+    //response header with remaining calls: X-Ratelimit-Remaining
     if (artistObj.hasOwnProperty(spotify_id))
         return callback(artistObj.spotify_id);
-    $.getJSON('http://developer.echonest.com/api/v4/artist/profile?api_key=JWARDUHE5GKDMWFDJ&format=jsonp&id=spotify:artist:' + spotify_id + '&bucket=genre&callback=?', function(res) {
-        var arr = res.response.artist.genres;
-        var ret = [];
-        for (var i = 0; i < arr.length; i++)
-            ret.push(arr[i].name);
-        echonestCalled++;
-        callback(ret);
-    });
+    else {
+        var artist = new Artist({
+            artistId: spotify_id,
+        });
+        artist.fetch({
+            headers: {
+                "x-access-token": local_token
+            },
+            success: function(data) {
+                return callback(data.genreList);
+            },
+            error: function() {
+                $.getJSON('http://developer.echonest.com/api/v4/artist/profile?api_key=JWARDUHE5GKDMWFDJ&format=jsonp&id=spotify:artist:' + spotify_id + '&bucket=genre&callback=?', function(res) {
+                    var arr = res.response.artist.genres;
+                    var ret = [];
+                    for (var i = 0; i < arr.length; i++)
+                        ret.push(arr[i].name);
+                    echonestCalled++;
+                    callback(ret);
+                });
+
+            }
+        });
+    }
 }
 
 function callSpotify(url, data, access_token, callback) {
