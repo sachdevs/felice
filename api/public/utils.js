@@ -57,40 +57,45 @@ function saveAllDataToDb(data) {
             dateAndIdObj.date = songinfo[i].added_at;
             dateAndIdObj.trackId = songinfo[i].track.id;
             dateAndIdArr.push(dateAndIdObj);
-            artistIdUnique[songinfo[i].track.artists[0].id] = true;
-            (function() {
-                //actually saving tracks to db
-                var track = new Track();
-                //make a list genre list here and put it in artistIdUnique obj
-                //modify save artists to use artistIdUnique to get genreList (thereby minimizing api calls to echonest)
-                //somehow figure out what to do when more than 120 songs need to be gotten genres for
-                //leave when more than 120 songs, check db for the rest
-                //put only if doesnt exist is probably the better option
-                var trackobj = {
-                    name: songinfo[i].track.name,
-                    trackId: songinfo[i].track.id,
-                    genreList: [],
-                    artist: songinfo[i].track.artists[0].name,
-                    artistId: songinfo[i].track.artists[0].id,
-                    album: songinfo[i].track.album.name,
-                    popularity: songinfo[i].track.popularity,
-                    duration_ms: songinfo[i].track.duration_ms,
-                    explicit: songinfo[i].track.explicit,
-                    preview_url: songinfo[i].track.preview_url,
-                    similar: [],
-                    token: data.local_token
-                };
-                track.save(trackobj, {
-                    success: function(model, response) {
-                        console.log('Successfully saved tracks yayyy!');
-                    },
-                    error: function(model, error) {
-                        console.log(error.responseText);
-                    }
+            (function(i) {
+                getEchonestGenres(songinfo[i].track.artists[0].id, artistIdUnique, function(genres) {
+                    artistIdUnique[songinfo[i].track.artists[0].id] = genres;
+                    //actually saving tracks to db
+                    var track = new Track();
+                    //make a list genre list here and put it in artistIdUnique obj
+                    //modify save artists to use artistIdUnique to get genreList (thereby minimizing api calls to echonest)
+                    //somehow figure out what to do when more than 120 songs need to be gotten genres for
+                    //leave when more than 120 songs, check db for the rest
+                    //put only if doesnt exist is probably the better option
+                    var trackobj = {
+                        name: songinfo[i].track.name,
+                        trackId: songinfo[i].track.id,
+                        genreList: genres,
+                        artist: songinfo[i].track.artists[0].name,
+                        artistId: songinfo[i].track.artists[0].id,
+                        album: songinfo[i].track.album.name,
+                        popularity: songinfo[i].track.popularity,
+                        duration_ms: songinfo[i].track.duration_ms,
+                        explicit: songinfo[i].track.explicit,
+                        preview_url: songinfo[i].track.preview_url,
+                        similar: [],
+                        token: data.local_token
+                    };
+                    (function() {
+                        track.save(trackobj, {
+                            success: function(model, response) {
+                                console.log('Successfully saved tracks yayyy!');
+                            },
+                            error: function(model, error) {
+                                console.log(error.responseText);
+                            }
+                        });
+                    })();
+                    if(i === songinfo.length-1)
+                        saveArtists(Object.keys(artistIdUnique), artistIdUnique, data.access_token, data.local_token);
                 });
-            })();
+            })(i);
         }
-        saveArtists(Object.keys(artistIdUnique), data.access_token, data.local_token);
         localStorage.setItem('songData', JSON.stringify(dateAndIdArr));
     });
 }
@@ -102,7 +107,7 @@ function saveAllDataToDb(data) {
  * @param  {String} local_token   jwt
  * @return {void}
  */
-function saveArtists(artistArr, spotify_token, local_token) {
+function saveArtists(artistArr, genreObj, spotify_token, local_token) {
     var urlList = createUrlList(artistArr);
     getArtists(urlList, spotify_token, local_token, function(data) {
         for (var i = 0; i < data.length; i++) {
@@ -112,10 +117,10 @@ function saveArtists(artistArr, spotify_token, local_token) {
                     var artist = new Artist();
                     var artistobj = {
                         name: safeObjectAccess(data[i], 'name'),
-                        artistId: safeObjectAccess(data[i], 'id'),
+                        artistId: data[i].id,
                         followers: data[i].followers.total,
                         popularity: safeObjectAccess(data[i], 'popularity'),
-                        genreList: [],
+                        genreList: genreObj[data[i].id],
                         imageUrl: JSON.stringify(safeObjectAccess(data[i], 'images')),
                         token: local_token
                     };
@@ -147,7 +152,7 @@ function createUrlList(artistArr) {
             urlArr.push(url);
             url = 'https://api.spotify.com/v1/artists/?ids=';
         }
-        else if(i === artistArr.length-1)
+        else if (i === artistArr.length - 1)
             url = url + artistArr[i];
         else
             url = url + artistArr[i] + ',';
@@ -199,11 +204,11 @@ function getTracks(spotify_token, local_token, callback) {
     });
 }
 
-function safeObjectAccess(obj, elementToAccess){
-    try{
+function safeObjectAccess(obj, elementToAccess) {
+    try {
         return obj[elementToAccess];
     }
-    catch(e){
+    catch (e) {
         return null;
     }
 }
@@ -236,12 +241,15 @@ function saveUser(data) {
     });
 }
 
-function getEchonestGenres(spotify_id, callback) {
+function getEchonestGenres(spotify_id, artistObj, callback) {
+    if (artistObj.hasOwnProperty(spotify_id))
+        return callback(artistObj.spotify_id);
     $.getJSON('http://developer.echonest.com/api/v4/artist/profile?api_key=JWARDUHE5GKDMWFDJ&format=jsonp&id=spotify:artist:' + spotify_id + '&bucket=genre&callback=?', function(res) {
         var arr = res.response.artist.genres;
         var ret = [];
-        for(var i = 0; i < arr.length; i++)
+        for (var i = 0; i < arr.length; i++)
             ret.push(arr[i].name);
+        echonestCalled++;
         callback(ret);
     });
 }
