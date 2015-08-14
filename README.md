@@ -36,19 +36,16 @@ Since there is a need to validate all api calls in the app, my current solution 
 | Endpoint  | HTTP Req  | Auth required  | Result  |
 |---|---|---|---|
 |{root}/api/artists   |GET   |Standard   |List of artists   |
-|   |POST   |Admin   |Create Artist   |
 |{root}/api/artists/:artistId   |GET   |Standard   |Get artist    |
-|   |PUT   |Standard   |Update artist   |
+|   |PUT   |Standard   |Update/Create artist   |
 |   |DELETE   |Admin   |Delete artist   |
 |{root}/api/users   |GET   |Standard   |List of users   |
-|   |POST   |Admin   |Create user   |
 |{root}/api/artists/:userId   |GET   |Standart   |Get user    |
-|   |PUT   |Standard   |Update user   |
+|   |PUT   |Standard   |Update/Create user   |
 |   |DELETE   |Admin   |Delete user   |
 |{root}/api/tracks   |GET   |Standard   |List of tracks   |
-|   |POST   |Admin   |Create track   |
 |{root}/api/artists/:trackId   |GET   |Standard   |Get track    |
-|   |PUT   |Standard   |Update track   |
+|   |PUT   |Standard   |Update/Create track   |
 |   |DELETE   |Admin   |Delete track   |
 |{root}/authenticate   |POST w/ authentication code   |Standard   |Returns jwt  |
 
