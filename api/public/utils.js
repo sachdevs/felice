@@ -57,16 +57,14 @@ function saveAllDataToDb(data) {
             dateAndIdObj.date = songinfo[i].added_at;
             dateAndIdObj.trackId = songinfo[i].track.id;
             dateAndIdArr.push(dateAndIdObj);
-            (function(i, obj) {
-                getEchonestGenres(songinfo[i].track.artists[0].id, data.local_token, artistIdUnique, function(genres) {
-                    artistIdUnique[songinfo[i].track.artists[0].id] = genres;
-                    // if (i === songinfo.length - 1) {
-                    //     saveTracks(artistIdUnique, songinfo, data.local_token);
-                    //     saveArtists(Object.keys(artistIdUnique), artistIdUnique, data.access_token, data.local_token);
-                    // }
-                });
-            })(i, artistIdUnique);
+            artistIdUnique[songinfo[i].track.artists[0].id] = true;
         }
+        //physically pains me to make two loops but currently cannot see any better way
+        var artistArr = Object.keys(artistIdUnique);
+        getEchonestGenres(artistArr, function(artistGenreMap) {
+            saveTracks(artistGenreMap, songinfo, data.local_token);
+            saveArtists(artistArr, artistGenreMap, data.access_token, data.local_token);
+        });
         localStorage.setItem('songData', JSON.stringify(dateAndIdArr));
     });
 }
@@ -182,7 +180,7 @@ function getArtists(urlList, spotify_token, local_token, callback) {
         (function(i, artistlist) {
             callSpotify(urlList[i], {}, spotify_token, function(items) {
                 list = list.concat(items.artists);
-                if(i ===  urlList.length-1)
+                if (i === urlList.length - 1)
                     callback(list);
             });
         })(i, list);
@@ -201,13 +199,12 @@ function getTracks(spotify_token, local_token, callback) {
     var url = 'https://api.spotify.com/v1/me/tracks?limit=50';
     callSpotify(url, {}, spotify_token, function(t) {
         list = list.concat(t.items);
-        console.log(list.length);
         for (i = 1; i < Math.ceil(t.total / 50); i++) {
             (function(i, tracks) {
                 callSpotify(url + "&offset=" + (50 * i), {}, spotify_token, function(s) {
                     list = list.concat(s.items);
-                    if(i === Math.ceil(t.total / 50)-1)
-                        callback(list);
+                    if (list.length ===  t.total)
+                        return callback(list);
                 });
             })(i, list);
         }
@@ -251,42 +248,44 @@ function saveUser(data) {
     });
 }
 
-function getEchonestGenres(spotify_id, local_token, artistObj, callback) {
-    //response header with remaining calls: X-Ratelimit-Remaining
-    console.log(artistObj);
-    if (artistObj.hasOwnProperty(spotify_id))
-        return callback(artistObj.spotify_id);
-    else {
-        $.getJSON('http://developer.echonest.com/api/v4/artist/profile?api_key=JWARDUHE5GKDMWFDJ&format=jsonp&id=spotify:artist:' + spotify_id + '&bucket=genre&callback=?', function(res) {
-            var arr = res.response.artist.genres;
-            var ret = [];
-            for (var i = 0; i < arr.length; i++)
-                ret.push(arr[i].name);
-            echonestCalled++;
-            callback(ret);
-        });
-        // var artist = new Artist({
-        //     artistId: spotify_id,
-        // });
-        // artist.fetch({
-        //     headers: {
-        //         "x-access-token": local_token
-        //     },
-        //     success: function(data) {
-        //         return callback(data.genreList);
-        //     },
-        //     error: function() {
-        //         $.getJSON('http://developer.echonest.com/api/v4/artist/profile?api_key=JWARDUHE5GKDMWFDJ&format=jsonp&id=spotify:artist:' + spotify_id + '&bucket=genre&callback=?', function(res) {
-        //             var arr = res.response.artist.genres;
-        //             var ret = [];
-        //             for (var i = 0; i < arr.length; i++)
-        //                 ret.push(arr[i].name);
-        //             echonestCalled++;
-        //             callback(ret);
-        //         });
-        //     }
-        // });
+function getEchonestGenres(artistArr, callback) {
+    //TODO response header with remaining calls: X-Ratelimit-Remaining
+    var artistObj = {};
+    for (var i = 0; i < artistArr.length; i++) {
+        (function(i, obj) {
+            $.getJSON('http://developer.echonest.com/api/v4/artist/profile?api_key=JWARDUHE5GKDMWFDJ&format=jsonp&id=spotify:artist:' + artistArr[i] + '&bucket=genre&callback=?', function(res) {
+                var arr = res.response.artist.genres;
+                var ret = [];
+                for (var j = 0; j < arr.length; j++)
+                    ret.push(arr[j].name);
+                echonestCalled++;
+                artistObj[artistArr[i]] = ret;
+                if (i === artistArr.length - 1)
+                    callback(artistObj);
+            });
+        })(i, artistObj);
     }
+    // var artist = new Artist({
+    //     artistId: spotify_id,
+    // });
+    // artist.fetch({
+    //     headers: {
+    //         "x-access-token": local_token
+    //     },
+    //     success: function(data) {
+    //         return callback(data.genreList);
+    //     },
+    //     error: function() {
+    //         $.getJSON('http://developer.echonest.com/api/v4/artist/profile?api_key=JWARDUHE5GKDMWFDJ&format=jsonp&id=spotify:artist:' + spotify_id + '&bucket=genre&callback=?', function(res) {
+    //             var arr = res.response.artist.genres;
+    //             var ret = [];
+    //             for (var i = 0; i < arr.length; i++)
+    //                 ret.push(arr[i].name);
+    //             echonestCalled++;
+    //             callback(ret);
+    //         });
+    //     }
+    // });
 }
 
 function callSpotify(url, data, access_token, callback) {
