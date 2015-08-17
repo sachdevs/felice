@@ -27,9 +27,7 @@ router.get('/:artistId', function(req, res) {
         if (err)
             return res.status(400).send(err);
         else if (artists.length === 0)
-            res.status(404).json({
-                msg: 'Not found'
-            });
+            return res.status(200).json({msg: "404"});
         res.json(artists[0]);
     });
 });

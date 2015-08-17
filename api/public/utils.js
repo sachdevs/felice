@@ -61,7 +61,7 @@ function saveAllDataToDb(data) {
         }
         //physically pains me to make two loops but currently cannot see any better way
         var artistArr = Object.keys(artistIdUnique);
-        getEchonestGenres(artistArr, function(artistGenreMap) {
+        getEchonestGenres(artistArr, data.local_token, function(artistGenreMap) {
             saveTracks(artistGenreMap, songinfo, data.local_token);
             saveArtists(artistArr, artistGenreMap, data.access_token, data.local_token);
         });
@@ -203,7 +203,7 @@ function getTracks(spotify_token, local_token, callback) {
             (function(i, tracks) {
                 callSpotify(url + "&offset=" + (50 * i), {}, spotify_token, function(s) {
                     list = list.concat(s.items);
-                    if (list.length ===  t.total)
+                    if (list.length === t.total)
                         return callback(list);
                 });
             })(i, list);
@@ -248,20 +248,37 @@ function saveUser(data) {
     });
 }
 
-function getEchonestGenres(artistArr, callback) {
+function getEchonestGenres(artistArr, local_token, callback) {
     //TODO response header with remaining calls: X-Ratelimit-Remaining
     var artistObj = {};
     for (var i = 0; i < artistArr.length; i++) {
+        var artist = new Artist({
+            artistId: artistArr[i],
+        });
         (function(i, obj) {
-            $.getJSON('http://developer.echonest.com/api/v4/artist/profile?api_key=JWARDUHE5GKDMWFDJ&format=jsonp&id=spotify:artist:' + artistArr[i] + '&bucket=genre&callback=?', function(res) {
-                var arr = res.response.artist.genres;
-                var ret = [];
-                for (var j = 0; j < arr.length; j++)
-                    ret.push(arr[j].name);
-                echonestCalled++;
-                artistObj[artistArr[i]] = ret;
-                if (i === artistArr.length - 1)
-                    callback(artistObj);
+            artist.fetch({
+                headers: {
+                    "x-access-token": local_token
+                },
+                success: function(model, data) {
+                    if (data.hasOwnProperty('msg')) {
+                        console.log("calling echonest");
+                        $.getJSON('http://developer.echonest.com/api/v4/artist/profile?api_key=JWARDUHE5GKDMWFDJ&format=jsonp&id=spotify:artist:' + artistArr[i] + '&bucket=genre&callback=?', function(res) {
+                            var arr = res.response.artist.genres;
+                            var ret = [];
+                            for (var j = 0; j < arr.length; j++)
+                                ret.push(arr[j].name);
+                            echonestCalled++;
+                            artistObj[artistArr[i]] = ret;
+                        });
+                    }
+                    else{
+                        console.log("calling db for artist data");
+                        artistObj[artistArr[i]] = data.genreList;
+                    }
+                    if (i === artistArr.length - 1)
+                        callback(artistObj);
+                }
             });
         })(i, artistObj);
     }
