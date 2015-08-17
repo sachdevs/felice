@@ -73,11 +73,6 @@ function saveTracks(artistObj, songinfo, local_token) {
     for (var i = 0; i < songinfo.length; i++) {
         //actually saving tracks to db
         var track = new Track();
-        //make a list genre list here and put it in artistIdUnique obj
-        //modify save artists to use artistIdUnique to get genreList (thereby minimizing api calls to echonest)
-        //somehow figure out what to do when more than 120 songs need to be gotten genres for
-        //leave when more than 120 songs, check db for the rest
-        //put only if doesnt exist is probably the better option
         var trackobj = {
             name: songinfo[i].track.name,
             trackId: songinfo[i].track.id,
@@ -282,27 +277,6 @@ function getEchonestGenres(artistArr, local_token, callback) {
             });
         })(i, artistObj);
     }
-    // var artist = new Artist({
-    //     artistId: spotify_id,
-    // });
-    // artist.fetch({
-    //     headers: {
-    //         "x-access-token": local_token
-    //     },
-    //     success: function(data) {
-    //         return callback(data.genreList);
-    //     },
-    //     error: function() {
-    //         $.getJSON('http://developer.echonest.com/api/v4/artist/profile?api_key=JWARDUHE5GKDMWFDJ&format=jsonp&id=spotify:artist:' + spotify_id + '&bucket=genre&callback=?', function(res) {
-    //             var arr = res.response.artist.genres;
-    //             var ret = [];
-    //             for (var i = 0; i < arr.length; i++)
-    //                 ret.push(arr[i].name);
-    //             echonestCalled++;
-    //             callback(ret);
-    //         });
-    //     }
-    // });
 }
 
 function callSpotify(url, data, access_token, callback) {
