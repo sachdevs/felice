@@ -17,8 +17,8 @@ var LoginView = Backbone.View.extend({
          * Spotify auth handling
          */
         loginBtn.click(function() {
-            var client_id = 'c9ce30f810254abfa32846f44b5533cf'; // Your client id
-            var redirect_uri = root+'/'; // Your redirect uri
+            var client_id = 'c9ce30f810254abfa32846f44b5533cf';
+            var redirect_uri = root+'/';
 
             var state = generateRandomString(16);
 
@@ -31,6 +31,8 @@ var LoginView = Backbone.View.extend({
             url += '&scope=' + encodeURIComponent(scope);
             url += '&redirect_uri=' + encodeURIComponent(redirect_uri);
             url += '&state=' + encodeURIComponent(state);
+
+            spotifyCalled++;
 
             window.location = url;
         });

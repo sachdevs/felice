@@ -76,7 +76,7 @@ function saveTracks(artistObj, songinfo, local_token) {
         var trackobj = {
             name: songinfo[i].track.name,
             trackId: songinfo[i].track.id,
-            genreList: artistObj[songinfo[i].track.artists[0].id],
+            genreList: artistObj[songinfo[i].track.artists[0].id] || [],
             artist: songinfo[i].track.artists[0].name,
             artistId: songinfo[i].track.artists[0].id,
             album: songinfo[i].track.album.name,
@@ -120,7 +120,7 @@ function saveArtists(artistArr, genreObj, spotify_token, local_token) {
                         artistId: data[i].id,
                         followers: data[i].followers.total,
                         popularity: safeObjectAccess(data[i], 'popularity'),
-                        genreList: genreObj[data[i].id],
+                        genreList: genreObj[data[i].id] || [],
                         imageUrl: JSON.stringify(safeObjectAccess(data[i], 'images')),
                         token: local_token
                     };
@@ -267,9 +267,23 @@ function getEchonestGenres(artistArr, local_token, callback) {
                             artistObj[artistArr[i]] = ret;
                         });
                     }
-                    else{
-                        console.log("calling db for artist data");
-                        artistObj[artistArr[i]] = data.genreList;
+                    else {
+                        if (data.genreList !== undefined && data.genreList.length !== 0) {
+                            console.log(data.genreList);
+                            console.log("calling db for artist data");
+                            artistObj[artistArr[i]] = data.genreList;
+                        }
+                        else {
+                            console.log("calling echonest");
+                            $.getJSON('http://developer.echonest.com/api/v4/artist/profile?api_key=JWARDUHE5GKDMWFDJ&format=jsonp&id=spotify:artist:' + artistArr[i] + '&bucket=genre&callback=?', function(res) {
+                                var arr = res.response.artist.genres;
+                                var ret = [];
+                                for (var j = 0; j < arr.length; j++)
+                                    ret.push(arr[j].name);
+                                echonestCalled++;
+                                artistObj[artistArr[i]] = ret;
+                            });
+                        }
                     }
                     if (i === artistArr.length - 1)
                         callback(artistObj);
@@ -280,6 +294,7 @@ function getEchonestGenres(artistArr, local_token, callback) {
 }
 
 function callSpotify(url, data, access_token, callback) {
+    spotifyCalled++;
     $.ajax(url, {
         dataType: 'json',
         data: data,
@@ -292,5 +307,11 @@ function callSpotify(url, data, access_token, callback) {
         error: function(r) {
             callback(null);
         }
+    });
+}
+
+function checkValidSpotifyToken(token, callback){
+    callSpotify('https://api.spotify.com/v1/me', {}, token, function(data){
+        return callback(data !== null);
     });
 }
