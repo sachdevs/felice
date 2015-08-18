@@ -6,41 +6,28 @@ var SidebarView = Backbone.View.extend({
     render: function() {
         var template = Handlebars.templates['sidebar'];
         this.$el.html(template({}));
-        //all the cool animations
-        $('#mainlogo').hide();
-        // $('.sidebar-labels').hide();
-        // $('.bs-sidebar').mouseenter(function() {
-        //     $(this).animate({
-        //         width: '170px'
-        //     }, 150);
-        //     $('.svg-icon').not($('#mainlogo')).animate({
-        //         'margin': '0px',
-        //         'margin-left': '10px',
-        //         'margin-top': '35px',
-        //         'height': '20px',
-        //         'width': '20px'
-        //     }, 150);
-        //     $('.sidebar-labels').show();
-        //     $('#home').hide();
-        //     $('#mainlogo').show();
-        // });
-
-        // $('.bs-sidebar').mouseleave(function() {
-        //     $(this).animate({
-        //         width: '70px'
-        //     }, 150);
-        //     $('.svg-icon').not($('#mainlogo')).animate({
-        //         'margin': '25px',
-        //         'margin-left': '10px',
-        //         'width': '40px',
-        //         'height': '40px'
-        //     }, 150);
-        //     $('.sidebar-labels').hide();
-        //     $('#home').show();
-        //     $('#mainlogo').hide();
-        // });
-        $('#profile').click(function(){
-            window.location = root+'/#profile';
+        $('#song-list').click(function() {
+            window.location = root + '/#';
+        });
+        $('#pie').click(function() {
+            window.location = root + '/#pie';
+        });
+        $('#line').click(function() {
+            window.location = root + '/#line';
+        });
+        $('#add-friend').click(function() {
+            window.location = root + '/#add-friend';
+        });
+        $('#profile').click(function() {
+            window.location = root + '/#profile';
+        });
+        $('.sidebar-containers').mouseover(function() {
+            $(this).css("background-color", "#cccccc");
+            $(this).css('cursor', 'pointer');
+        });
+        $('.sidebar-containers').mouseleave(function() {
+            $(this).css("background-color", "black");
+            $(this).css('cursor', 'default');
         });
     },
     destroyView: function() {
