@@ -46,7 +46,6 @@ function generateRandomString(length) {
  * @return {void}
  */
 function saveAllDataToDb(data) {
-    saveUser(data);
     getTracks(data.access_token, data.local_token, function(songinfo) {
         var dateAndIdArr = [];
         //hash table esque method to check duplicates and create a map of artists that must be called
@@ -61,12 +60,36 @@ function saveAllDataToDb(data) {
         }
         //physically pains me to make two loops but currently cannot see any better way
         var artistArr = Object.keys(artistIdUnique);
-        getEchonestGenres(artistArr, data.local_token, function(artistGenreMap) {
+        getEchonestGenres(artistArr, data.local_token, function(artistGenreMap, genreCount) {
             saveTracks(artistGenreMap, songinfo, data.local_token);
             saveArtists(artistArr, artistGenreMap, data.access_token, data.local_token);
+            var tempGenreList = [];
+            for (var k in genreCount) {
+                tempGenreList.push({
+                    name: k,
+                    count: genreCount[k]
+                });
+            }
+            tempGenreList.sort(compare);
+            var genreList = [];
+            var val = 10;
+            if (tempGenreList.length < 10)
+                val = tempGenreList.length;
+            for (var i = 0; i < val; i++) {
+                genreList.push(tempGenreList[i].name);
+            }
+            saveUser(data, genreList);
         });
         localStorage.setItem('songData', JSON.stringify(dateAndIdArr));
     });
+}
+
+function compare(a, b) {
+    if (a.count > b.count)
+        return -1;
+    if (a.count < b.count)
+        return 1;
+    return 0;
 }
 
 /**
@@ -233,7 +256,7 @@ function safeObjectAccess(obj, elementToAccess) {
  * @param  {Object} data      from felice api
  * @return {void}
  */
-function saveUser(data) {
+function saveUser(data, genreList) {
     var user = new User();
     var obj = {
         userId: safeObjectAccess(data.body, 'id'),
@@ -242,7 +265,7 @@ function saveUser(data) {
         spotifyURI: safeObjectAccess(data.body, 'uri'),
         imageUrl: JSON.stringify(safeObjectAccess(data.body, 'images')),
         country: safeObjectAccess(data.body, 'country'),
-        genreList: [],
+        genreList: genreList,
         watchingList: [],
         token: data.local_token //auth token
     };
@@ -265,50 +288,82 @@ function saveUser(data) {
 function getEchonestGenres(artistArr, local_token, callback) {
     //TODO response header with remaining calls: X-Ratelimit-Remaining
     var artistObj = {};
+    var genreCount = {};
     for (var i = 0; i < artistArr.length; i++) {
         var artist = new Artist({
             artistId: artistArr[i],
         });
-        (function(i, obj) {
+        (function(i, obj, count) {
             artist.fetch({
                 headers: {
                     "x-access-token": local_token
                 },
                 success: function(model, data) {
                     if (data.hasOwnProperty('msg')) {
-                        console.log("calling echonest");
+                        console.log("calling echonest because not in db");
                         $.getJSON('http://developer.echonest.com/api/v4/artist/profile?api_key=JWARDUHE5GKDMWFDJ&format=jsonp&id=spotify:artist:' + artistArr[i] + '&bucket=genre&callback=?', function(res) {
                             var arr = res.response.artist.genres;
                             var ret = [];
-                            for (var j = 0; j < arr.length; j++)
+                            for (var j = 0; j < arr.length; j++) {
                                 ret.push(arr[j].name);
+                                if (genreCount.hasOwnProperty(arr[j].name)) {
+                                    genreCount[arr[j].name]++;
+                                }
+                                else {
+                                    genreCount[arr[j].name] = 1;
+                                }
+                            }
                             echonestCalled++;
                             artistObj[artistArr[i]] = ret;
+                            console.log(genreCount);
+                        }).done(function() {
+                            if (i === artistArr.length - 1) {
+                                console.log(genreCount);
+                                return callback(artistObj, genreCount);
+                            }
                         });
                     }
                     else {
                         if (data.genreList !== undefined && data.genreList.length !== 0) {
-                            console.log(data.genreList);
                             console.log("calling db for artist data");
-                            artistObj[artistArr[i]] = data.genreList;
+                            var list = data.genreList;
+                            artistObj[artistArr[i]] = list;
+                            for (var j = 0; j < list.length; j++) {
+                                if (genreCount.hasOwnProperty(list[j]))
+                                    genreCount[list[j]]++;
+                                else
+                                    genreCount[list[j]] = 1;
+                            }
                         }
                         else {
-                            console.log("calling echonest");
+                            console.log("calling echonest in case echonest updated the genres");
                             $.getJSON('http://developer.echonest.com/api/v4/artist/profile?api_key=JWARDUHE5GKDMWFDJ&format=jsonp&id=spotify:artist:' + artistArr[i] + '&bucket=genre&callback=?', function(res) {
                                 var arr = res.response.artist.genres;
                                 var ret = [];
-                                for (var j = 0; j < arr.length; j++)
+                                for (var j = 0; j < arr.length; j++) {
                                     ret.push(arr[j].name);
+                                    if (genreCount.hasOwnProperty(arr[j].name))
+                                        genreCount[arr[j].name]++;
+                                    else
+                                        genreCount[arr[j].name] = 1;
+                                }
                                 echonestCalled++;
                                 artistObj[artistArr[i]] = ret;
+                            }).done(function() {
+                                if (i === artistArr.length - 1) {
+                                    console.log(genreCount);
+                                    return callback(artistObj, genreCount);
+                                }
                             });
                         }
                     }
-                    if (i === artistArr.length - 1)
-                        callback(artistObj);
+                    if (i === artistArr.length - 1) {
+                        console.log(genreCount);
+                        return callback(artistObj, genreCount);
+                    }
                 }
             });
-        })(i, artistObj);
+        })(i, artistObj, genreCount);
     }
 }
 
@@ -334,8 +389,8 @@ function callSpotify(url, data, access_token, callback) {
  * @param  {String}   token    spotify token
  * @param  {Function} callback
  */
-function checkValidSpotifyToken(token, callback){
-    callSpotify('https://api.spotify.com/v1/me', {}, token, function(data){
+function checkValidSpotifyToken(token, callback) {
+    callSpotify('https://api.spotify.com/v1/me', {}, token, function(data) {
         return callback(data !== null);
     });
 }
