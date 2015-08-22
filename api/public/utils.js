@@ -69,6 +69,13 @@ function saveAllDataToDb(data) {
     });
 }
 
+/**
+ * saves tracks
+ * @param  {Object} artistObj   a map of artist id to genre array
+ * @param  {Array} songinfo    list of songs from spotify
+ * @param  {String} local_token jwt
+ * @return {void}
+ */
 function saveTracks(artistObj, songinfo, local_token) {
     for (var i = 0; i < songinfo.length; i++) {
         //actually saving tracks to db
@@ -206,6 +213,12 @@ function getTracks(spotify_token, local_token, callback) {
     });
 }
 
+/**
+ * auxiliary function to make sure obj exists before trying to access property.
+ * @param  {Object} obj
+ * @param  {String} elementToAccess
+ * @return {Depends} null if DNE
+ */
 function safeObjectAccess(obj, elementToAccess) {
     try {
         return obj[elementToAccess];
@@ -243,6 +256,12 @@ function saveUser(data) {
     });
 }
 
+/**
+ * gets genres using array of artist ids
+ * @param  {Array}   artistArr   artist Ids (in this case they are unique)
+ * @param  {String}   local_token jwt from felice api
+ * @param  {Function} callback
+ */
 function getEchonestGenres(artistArr, local_token, callback) {
     //TODO response header with remaining calls: X-Ratelimit-Remaining
     var artistObj = {};
@@ -310,6 +329,11 @@ function callSpotify(url, data, access_token, callback) {
     });
 }
 
+/**
+ * make sure user still has a valid token
+ * @param  {String}   token    spotify token
+ * @param  {Function} callback
+ */
 function checkValidSpotifyToken(token, callback){
     callSpotify('https://api.spotify.com/v1/me', {}, token, function(data){
         return callback(data !== null);
