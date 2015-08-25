@@ -56,14 +56,18 @@ function saveAllDataToDb(data) {
             dateAndIdObj.date = songinfo[i].added_at;
             dateAndIdObj.trackId = songinfo[i].track.id;
             dateAndIdArr.push(dateAndIdObj);
-            artistIdUnique[songinfo[i].track.artists[0].id] = true;
+            if (artistIdUnique.hasOwnProperty(songinfo[i].track.artists[0].id))
+                artistIdUnique[songinfo[i].track.artists[0].id]++;
+            else
+                artistIdUnique[songinfo[i].track.artists[0].id] = 1;
         }
         //physically pains me to make two loops but currently cannot see any better way
         var artistArr = Object.keys(artistIdUnique);
-        getEchonestGenres(artistArr, data.local_token, function(artistGenreMap, genreCount) {
+        getEchonestGenres(artistArr, data.local_token, artistIdUnique, function(artistGenreMap, genreCount) {
             saveTracks(artistGenreMap, songinfo, data.local_token);
             saveArtists(artistArr, artistGenreMap, data.access_token, data.local_token);
             var tempGenreList = [];
+            console.log(genreCount);
             for (var k in genreCount) {
                 tempGenreList.push({
                     name: k,
@@ -285,7 +289,7 @@ function saveUser(data, genreList) {
  * @param  {String}   local_token jwt from felice api
  * @param  {Function} callback
  */
-function getEchonestGenres(artistArr, local_token, callback) {
+function getEchonestGenres(artistArr, local_token, artistCountMap, callback) {
     //TODO response header with remaining calls: X-Ratelimit-Remaining
     var artistObj = {};
     var genreCount = {};
@@ -307,7 +311,7 @@ function getEchonestGenres(artistArr, local_token, callback) {
                             for (var j = 0; j < arr.length; j++) {
                                 ret.push(arr[j].name);
                                 if (genreCount.hasOwnProperty(arr[j].name)) {
-                                    genreCount[arr[j].name]++;
+                                    genreCount[arr[j].name] += artistCountMap[artistArr[i]];
                                 }
                                 else {
                                     genreCount[arr[j].name] = 1;
@@ -315,10 +319,8 @@ function getEchonestGenres(artistArr, local_token, callback) {
                             }
                             echonestCalled++;
                             artistObj[artistArr[i]] = ret;
-                            console.log(genreCount);
                         }).done(function() {
                             if (i === artistArr.length - 1) {
-                                console.log(genreCount);
                                 return callback(artistObj, genreCount);
                             }
                         });
@@ -330,7 +332,7 @@ function getEchonestGenres(artistArr, local_token, callback) {
                             artistObj[artistArr[i]] = list;
                             for (var j = 0; j < list.length; j++) {
                                 if (genreCount.hasOwnProperty(list[j]))
-                                    genreCount[list[j]]++;
+                                    genreCount[list[j]] += artistCountMap[artistArr[i]];
                                 else
                                     genreCount[list[j]] = 1;
                             }
@@ -343,7 +345,7 @@ function getEchonestGenres(artistArr, local_token, callback) {
                                 for (var j = 0; j < arr.length; j++) {
                                     ret.push(arr[j].name);
                                     if (genreCount.hasOwnProperty(arr[j].name))
-                                        genreCount[arr[j].name]++;
+                                        genreCount[arr[j].name] += artistCountMap[artistArr[i]];
                                     else
                                         genreCount[arr[j].name] = 1;
                                 }
@@ -358,7 +360,6 @@ function getEchonestGenres(artistArr, local_token, callback) {
                         }
                     }
                     if (i === artistArr.length - 1) {
-                        console.log(genreCount);
                         return callback(artistObj, genreCount);
                     }
                 }
