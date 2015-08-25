@@ -1,4 +1,14 @@
 /**
+ * Bootstrap font override
+ */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Open Sans', sans-serif;
+}
+p, div {
+    font-family: 'Open Sans', sans-serif;
+}
+
+/**
  * sidebar stuffs
  */
 .bs-sidebar .nav > .active > ul {
@@ -28,6 +38,17 @@
     margin: 25px;
     margin-top: 20px;
     margin-left: 25px;
+}
+/**
+ * Main View
+ */
+.main-container {
+}
+#main-header {
+    margin-top: 0;
+    padding-left: 120px;
+    padding-top: 20px;
+    color: #C8C8C8;
 }
 
 /**

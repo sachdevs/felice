@@ -40,7 +40,9 @@ var AppRouter = Backbone.Router.extend({
             }
         });
     },
-    home: function() {},
+    home: function() {
+        this.songListView = new SongListView();
+    },
     profile: function() {
         alert("hi");
     },
