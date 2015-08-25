@@ -121,7 +121,7 @@ function saveTracks(artistObj, songinfo, local_token) {
             similar: [],
             token: local_token
         };
-        (function() {
+        (function(i) {
             track.save(trackobj, {
                 success: function(model, response) {
                     console.log('Successfully saved tracks yayyy!');
@@ -130,7 +130,16 @@ function saveTracks(artistObj, songinfo, local_token) {
                     console.log(error.responseText);
                 }
             });
-        })();
+            if(i === songinfo.length-1){
+                var allTracks = [
+                    "data",
+                    "data",
+                    "data",
+                    "data"
+                ];
+                $(window.songListView).trigger('trackData', [allTracks]);
+            }
+        })(i);
     }
 }
 
