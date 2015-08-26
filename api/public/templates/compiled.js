@@ -9,7 +9,7 @@ templates['sidebar'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":functio
 templates['songlist'] = template({"1":function(depth0,helpers,partials,data) {
     var alias1=this.lambda, alias2=this.escapeExpression;
 
-  return "		<li>"
+  return "		<hr class=\"track-divider\">\r\n		<li class=\"track\">"
     + alias2(alias1((depth0 != null ? depth0.name : depth0), depth0))
     + " "
     + alias2(alias1((depth0 != null ? depth0.artist : depth0), depth0))
@@ -21,7 +21,7 @@ templates['songlist'] = template({"1":function(depth0,helpers,partials,data) {
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1;
 
-  return "<h1 id=\"main-header\">Library</h1>\r\n<ul>\r\n"
+  return "<h1 id=\"main-header\">Library</h1>\r\n<ul class=\"songlist\">\r\n"
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.songList : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "</ul>";
 },"useData":true});

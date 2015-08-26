@@ -3,9 +3,11 @@
  */
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Open Sans', sans-serif;
+    color: #C8C8C8;
 }
 p, div {
     font-family: 'Open Sans', sans-serif;
+    color: #C8C8C8;
 }
 
 /**
@@ -43,12 +45,30 @@ p, div {
  * Main View
  */
 .main-container {
-    padding-left: 120px;
+    padding-left: 90px;
 }
 #main-header {
     margin-top: 0;
     padding-top: 20px;
-    color: #C8C8C8;
+    margin-left: 20px;
+    padding-bottom: 10px;
+}
+
+/**
+ * Songlist view (aka home)
+ */
+.songlist {
+    list-style-type: none;
+    padding-left: 0;
+}
+.track {
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 20px;
+}
+
+.track-divider{
+    color: #1B1B1B;
 }
 
 /**

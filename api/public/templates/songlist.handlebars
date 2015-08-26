@@ -1,6 +1,7 @@
 <h1 id="main-header">Library</h1>
-<ul>
+<ul class="songlist">
 	{{#each songList}}
-		<li>{{this.name}} {{this.artist}} <a href="https://open.spotify.com/track/{{this.trackId}}" target="_blank">CLICK TO PLAY</a> {{this.duration_ms}} </li>
+		<hr class="track-divider">
+		<li class="track">{{this.name}} {{this.artist}} <a href="https://open.spotify.com/track/{{this.trackId}}" target="_blank">CLICK TO PLAY</a> {{this.duration_ms}} </li>
 	{{/each}}
 </ul>
