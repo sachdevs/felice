@@ -104,6 +104,7 @@ function compare(a, b) {
  * @return {void}
  */
 function saveTracks(artistObj, songinfo, local_token) {
+    var trackArr = [];
     for (var i = 0; i < songinfo.length; i++) {
         //actually saving tracks to db
         var track = new Track();
@@ -121,6 +122,7 @@ function saveTracks(artistObj, songinfo, local_token) {
             similar: [],
             token: local_token
         };
+        trackArr.push(trackobj);
         (function(i) {
             track.save(trackobj, {
                 success: function(model, response) {
@@ -131,13 +133,8 @@ function saveTracks(artistObj, songinfo, local_token) {
                 }
             });
             if(i === songinfo.length-1){
-                var allTracks = [
-                    "data",
-                    "data",
-                    "data",
-                    "data"
-                ];
-                $(window.songListView).trigger('trackData', [allTracks]);
+                localStorage.setItem('trackData', JSON.stringify(trackArr));
+                $(window.songListView).trigger('trackData', [trackArr]);
             }
         })(i);
     }

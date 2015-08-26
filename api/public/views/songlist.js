@@ -2,23 +2,14 @@ var SongListView = Backbone.View.extend({
     el: $('.main-container'),
     initialize: function() {
         $(this).on('trackData', this.render);
+        if(localStorage.getItem('trackData'))
+            this.render(null, JSON.parse(localStorage.getItem('trackData')));
     },
     render: function(e, trackData) {
         console.log(trackData);
-        trackCollection = [{
-            id: 0
-        }, {
-            id: 1
-        }, {
-            id: 2
-        }, {
-            id: 3
-        }, {
-            id: 4
-        }];
         var template = Handlebars.templates['songlist'];
         this.$el.html(template({
-            songList: trackCollection
+            songList: trackData
         }));
     },
     destroyView: function() {

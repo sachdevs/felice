@@ -35,7 +35,7 @@ var AppRouter = Backbone.Router.extend({
                 });
             }
             else {
-                if (!window.hasOwnProperty('sidebarView')) {
+                if (!window.hasOwnProperty('sidebarView') && window.location.hash !== "#login") {
                     this.sidebarView = new SidebarView();
                 }
             }
@@ -45,9 +45,9 @@ var AppRouter = Backbone.Router.extend({
         window.songListView = new SongListView();
     },
     profile: function() {
-        alert("hi");
     },
     login: function() {
+        delete window.sidebarView;
         this.loginView = new LoginView();
     }
 });

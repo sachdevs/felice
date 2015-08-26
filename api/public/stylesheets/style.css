@@ -43,10 +43,10 @@ p, div {
  * Main View
  */
 .main-container {
+    padding-left: 120px;
 }
 #main-header {
     margin-top: 0;
-    padding-left: 120px;
     padding-top: 20px;
     color: #C8C8C8;
 }

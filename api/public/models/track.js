@@ -15,3 +15,7 @@ var Track = Backbone.Model.extend({
         similar: []
     }
 });
+
+var Tracks = Backbone.Collection.extend({
+    model: Track
+});

@@ -1,5 +1,5 @@
 var LoginView = Backbone.View.extend({
-    el: $('.login-container'),
+    el: $('.main-container'),
     initialize: function() {
         this.render();
     },
