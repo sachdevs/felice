@@ -9,15 +9,13 @@ templates['sidebar'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":functio
 templates['songlist'] = template({"1":function(depth0,helpers,partials,data) {
     var alias1=this.lambda, alias2=this.escapeExpression;
 
-  return "		<hr class=\"track-divider\">\r\n		<li class=\"track\">"
+  return "		<hr class=\"track-divider\">\r\n		<li class=\"track\">\r\n			<a href=\"https://open.spotify.com/track/"
+    + alias2(alias1((depth0 != null ? depth0.trackId : depth0), depth0))
+    + "\" target=\"_blank\">\r\n			<svg\r\n	           xmlns:dc=\"http://purl.org/dc/elements/1.1/\"\r\n	           xmlns:cc=\"http://creativecommons.org/ns#\"\r\n	           xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\r\n	           xmlns:svg=\"http://www.w3.org/2000/svg\"\r\n	           xmlns=\"http://www.w3.org/2000/svg\"\r\n	           version=\"1.1\"\r\n	           id=\"svg4136\"\r\n	           viewBox=\"0 0 192 192\"\r\n	           style=\"\r\n	           	height: 20px;\r\n	           	width: 20px;\r\n	           \">\r\n	          <defs\r\n	             id=\"defs4138\" />\r\n	          <metadata\r\n	             id=\"metadata4141\">\r\n	            <rdf:RDF>\r\n	              <cc:Work\r\n	                 rdf:about=\"\">\r\n	                <dc:format>image/svg+xml</dc:format>\r\n	                <dc:type\r\n	                   rdf:resource=\"http://purl.org/dc/dcmitype/StillImage\" />\r\n	                <dc:title></dc:title>\r\n	              </cc:Work>\r\n	            </rdf:RDF>\r\n	          </metadata>\r\n	          <g\r\n	             transform=\"translate(0,-860.36216)\"\r\n	             id=\"layer1\" />\r\n	          <g\r\n	             id=\"layer2\">\r\n	            <path\r\n	               transform=\"matrix(1.1764192,0,0,1.0752327,-27.131273,-3.224908)\"\r\n	               d=\"M 43.564355,162.29703 42.948727,24.038598 162.99185,92.634664 Z\"\r\n	               id=\"path8014\"\r\n	               style=\"fill:#88888f;fill-opacity:1;stroke:#88888f;stroke-width:5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1\" />\r\n	          </g>\r\n	        </svg>\r\n			</a>\r\n			"
     + alias2(alias1((depth0 != null ? depth0.name : depth0), depth0))
     + " "
     + alias2(alias1((depth0 != null ? depth0.artist : depth0), depth0))
-    + " <a href=\"https://open.spotify.com/track/"
-    + alias2(alias1((depth0 != null ? depth0.trackId : depth0), depth0))
-    + "\" target=\"_blank\">CLICK TO PLAY</a> "
-    + alias2(alias1((depth0 != null ? depth0.duration_ms : depth0), depth0))
-    + " </li>\r\n";
+    + "\r\n		</li>\r\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1;
 

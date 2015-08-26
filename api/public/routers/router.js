@@ -25,8 +25,7 @@ var AppRouter = Backbone.Router.extend({
                         localStorage.setItem('spotify_token', data.access_token);
                         this.sidebarView = new SidebarView();
                         console.log(data);
-                        saveAllDataToDb(data).done(function(){
-                        });
+                        saveAllDataToDb(data).done(function() {});
                     },
                     error: function(data) {
                         window.location = root + '/#login';
@@ -45,6 +44,10 @@ var AppRouter = Backbone.Router.extend({
         window.songListView = new SongListView();
     },
     profile: function() {
+        $('.main-container').html("");
+        console.log($('.main-container').html() === "");
+        if ($('.main-container').html() === "")
+            window.loadingView = new LoadingView();
     },
     login: function() {
         delete window.sidebarView;

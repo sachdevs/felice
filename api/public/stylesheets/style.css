@@ -50,7 +50,7 @@ p, div {
 #main-header {
     margin-top: 0;
     padding-top: 20px;
-    margin-left: 20px;
+    margin-left: 30px;
     padding-bottom: 10px;
 }
 
@@ -62,13 +62,23 @@ p, div {
     padding-left: 0;
 }
 .track {
-    padding-top: 2px;
-    padding-bottom: 2px;
-    padding-left: 20px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    padding-left: 35px;
 }
 
 .track-divider{
-    color: #1B1B1B;
+    padding: 0;
+    margin: 0;
+    border-color: #1B1B1B;
+}
+
+/**
+ * Loader
+ */
+.loader {
+    margin-top: 50px;
+    margin-left: 200px;
 }
 
 /**

@@ -11,6 +11,12 @@ var SongListView = Backbone.View.extend({
         this.$el.html(template({
             songList: trackData
         }));
+        $('.track').mouseover(function() {
+            $(this).css("background-color", "#2D2D2D");
+        });
+        $('.track').mouseleave(function() {
+            $(this).css("background-color", "#121212");
+        });
     },
     destroyView: function() {
         // COMPLETELY UNBIND THE VIEW
