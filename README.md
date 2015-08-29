@@ -2,7 +2,7 @@
 A bunch of data for your Spotify music library <br>
 Quick description of approach: <br>
 Rest api written in express js, node, mongoose and a few miscellaneous libs <br>
-Front end written in backbone and sass
+Front end written in backbone, jQuery, and templating done in handlebars
 ##Installation instructions
 Make sure you have mongodb installed. <br>
 In one terminal window run: (if on windows make sure your mongodb directory is in you path)
