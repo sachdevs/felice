@@ -49,6 +49,12 @@ var AppRouter = Backbone.Router.extend({
         if ($('.main-container').html() === "")
             window.loadingView = new LoadingView();
     },
+    pie: function() {
+        $('.main-container').html("");
+        console.log($('.main-container').html() === "");
+        if ($('.main-container').html() === "")
+            window.pieView = new PieView();
+    },
     login: function() {
         delete window.sidebarView;
         this.loginView = new LoginView();
