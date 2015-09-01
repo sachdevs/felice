@@ -280,6 +280,7 @@ function saveUser(data, genreList) {
         watchingList: [],
         token: data.local_token //auth token
     };
+    localStorage.setItem("topTen", JSON.stringify(genreList));
     user.save(obj, {
         success: function(model, response) {
             console.log('Successfully saved yayyy!');

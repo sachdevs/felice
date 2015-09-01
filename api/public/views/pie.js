@@ -4,12 +4,15 @@ var PieView = Backbone.View.extend({
         this.render();
     },
     render: function() {
-        $(".sidebar-container").after('<button class="randomize" style="display: none">herheherherhereherherher </button>')
         var data = JSON.parse(localStorage.getItem("pieData"));
-        console.log(data);
-        this.draw(data);
+        var topTen = JSON.parse(localStorage.getItem("topTen"));
+        for(var i = 0; i < topTen.length; i++){
+            topTen[i] = topTen[i].replace(/\s|&/g, '');
+        }
+        console.log(topTen);
+        this.draw(data, topTen);
     },
-    draw: function(dataObj) {
+    draw: function(dataObj, topTen) {
         var svg = d3.select(".main-container")
             .append("svg")
             .attr("class", "pie-chart")
@@ -76,7 +79,7 @@ var PieView = Backbone.View.extend({
             });
 
 
-        change(defaultData(), function(){
+        change(defaultData(), function() {
             change(changedData());
         });
 
@@ -92,8 +95,8 @@ var PieView = Backbone.View.extend({
                     return color(d.data.label);
                 })
                 .attr("class", "slice")
-                .attr("id", function(d){
-                    var temp = d.data.label.replace(/\s/g, '');
+                .attr("id", function(d) {
+                    var temp = d.data.label.replace(/\s|&/g, '');
                     return temp;
                 });
 
@@ -119,8 +122,8 @@ var PieView = Backbone.View.extend({
             text.enter()
                 .append("text")
                 .attr("dy", ".35em")
-                .attr("class", function(d){
-                    var temp = d.data.label.replace(/\s/g, '');
+                .attr("class", function(d) {
+                    var temp = d.data.label.replace(/\s|&/g, '');
                     return "pie-labels " + temp;
                 })
                 .text(function(d) {
@@ -159,14 +162,18 @@ var PieView = Backbone.View.extend({
             /* ------- SLICE TO TEXT POLYLINES -------*/
 
             var polyline = svg.select(".lines").selectAll("polyline")
-                .attr("class", function(d){
-                    var temp = d.data.label.replace(/\s/g, '');
-                    return 'pie-lines ' + temp;
+                .attr("class", function(d) {
+                    var temp = d.data.label.replace(/\s|&/g, '');
+                    return temp;
                 })
                 .data(pie(data), key);
 
             polyline.enter()
-                .append("polyline");
+                .append("polyline")
+                .attr("class", function(d) {
+                    var temp = d.data.label.replace(/\s|&/g, '');
+                    return temp;
+                });
 
             polyline.transition().duration(1000)
                 .attrTween("points", function(d) {
@@ -185,15 +192,32 @@ var PieView = Backbone.View.extend({
                 .remove();
             setTimeout(callback, 250);
         };
-        $('.pie-labels').hide();
-        $('polyline').hide();
+
+        $('.pie-labels').each(function(i) {
+            var name = $(this).attr("class").split(/\s/g)[1];
+            $(this).hide();
+            for(var k = 0; k < topTen.length; k++){
+                if(name === topTen[k]){
+                    $(this).show();
+                }
+            }
+        });
+        $('polyline').each(function(i) {
+            var name = $(this).attr("class");
+            $(this).hide();
+            for(var k = 0; k < topTen.length; k++){
+                if(name === topTen[k]){
+                    $(this).show();
+                }
+            }
+        });
         $(".slice").mouseenter(function() {
             var id = $(this).attr('id');
-            $("."+id).show(500);
+            $("." + id).show(500);
         });
         $(".slice").mouseout(function() {
             var id = $(this).attr('id');
-            $("."+id).hide(500);
+            $("." + id).hide(500);
         });
     },
     destroyView: function() {
