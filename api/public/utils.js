@@ -64,6 +64,7 @@ function saveAllDataToDb(data) {
         //physically pains me to make two loops but currently cannot see any better way
         var artistArr = Object.keys(artistIdUnique);
         getEchonestGenres(artistArr, data.local_token, artistIdUnique, function(artistGenreMap, genreCount) {
+            localStorage.setItem("pieData", JSON.stringify(genreCount));
             saveTracks(artistGenreMap, songinfo, data.local_token);
             saveArtists(artistArr, artistGenreMap, data.access_token, data.local_token);
             var tempGenreList = [];

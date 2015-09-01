@@ -84,12 +84,13 @@ p, div {
 /**
  * Pie
  */
+
 .pie-labels {
     fill: white;
 }
 
 .pie-chart {
-    width: 100%;
+    width: 900px;
     height: 100%;
 }
 
@@ -105,6 +106,9 @@ polyline{
     fill: none;
 }
 
+.highlight {
+    fill: #181818;
+}
 /**
  * no highlighting
  */
