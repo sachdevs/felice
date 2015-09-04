@@ -144,11 +144,13 @@ polyline {
 .axis text {
     font-family: Lato;
     font-size: 13px;
+    fill: white;
 }
 
 .legend {
     font-size: 14px;
     font-weight: bold;
+    fill: white;
 }
 
 

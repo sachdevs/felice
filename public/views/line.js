@@ -116,7 +116,6 @@ var LineGraph = Backbone.View.extend({
             vis.append("text")
                 .attr("x", (lSpace / 2) + i * lSpace)
                 .attr("y", HEIGHT)
-                .style("fill", "black")
                 .attr("class", "legend")
                 .on('click', function() {
                     var active = d.active ? false : true;
