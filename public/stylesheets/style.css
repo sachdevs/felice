@@ -1,18 +1,28 @@
 /**
  * Bootstrap font override
  */
-h1, h2, h3, h4, h5, h6 {
-    font-family: 'Open Sans', sans-serif;
-    color: #C8C8C8;
-}
-p, div {
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     font-family: 'Open Sans', sans-serif;
     color: #C8C8C8;
 }
 
+p,
+div {
+    font-family: 'Open Sans', sans-serif;
+    color: #C8C8C8;
+}
+
+
 /**
  * sidebar stuffs
  */
+
 .bs-sidebar .nav > .active > ul {
     display: block;
     margin-bottom: 8px;
@@ -41,12 +51,16 @@ p, div {
     margin-top: 20px;
     margin-left: 25px;
 }
+
+
 /**
  * Main View
  */
+
 .main-container {
     padding-left: 90px;
 }
+
 #main-header {
     margin-top: 0;
     padding-top: 20px;
@@ -54,32 +68,38 @@ p, div {
     padding-bottom: 10px;
 }
 
+
 /**
  * Songlist view (aka home)
  */
+
 .songlist {
     list-style-type: none;
     padding-left: 0;
 }
+
 .track {
     padding-top: 7px;
     padding-bottom: 7px;
     padding-left: 35px;
 }
 
-.track-divider{
+.track-divider {
     padding: 0;
     margin: 0;
     border-color: #1B1B1B;
 }
 
+
 /**
  * Loader
  */
+
 .loader {
     margin-top: 50px;
     margin-left: 200px;
 }
+
 
 /**
  * Pie
@@ -94,12 +114,12 @@ p, div {
     height: 100%;
 }
 
-path.slice{
-    stroke-width:2px;
+path.slice {
+    stroke-width: 2px;
     color: white;
 }
 
-polyline{
+polyline {
     opacity: .3;
     stroke: white;
     stroke-width: 2px;
@@ -109,9 +129,33 @@ polyline{
 .highlight {
     fill: #181818;
 }
+
+
+/**
+ * Line
+ */
+
+.axis path {
+    fill: none;
+    stroke: #777;
+    shape-rendering: crispEdges;
+}
+
+.axis text {
+    font-family: Lato;
+    font-size: 13px;
+}
+
+.legend {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+
 /**
  * no highlighting
  */
+
 body {
     background-color: #121212;
     -webkit-touch-callout: none;

@@ -4,7 +4,7 @@ var AppRouter = Backbone.Router.extend({
         "login": "login",
         "profile": "profile",
         "pie": "pie",
-        "timegenre": "timegenre",
+        "line": "timegenre",
         "searchuser/:query": "search"
     },
     initialize: function() {
@@ -54,6 +54,12 @@ var AppRouter = Backbone.Router.extend({
         console.log($('.main-container').html() === "");
         if ($('.main-container').html() === "")
             window.pieView = new PieView();
+    },
+    timegenre: function(){
+        $('.main-container').html("");
+        console.log($('.main-container').html() === "");
+        if ($('.main-container').html() === "")
+            window.lineView = new LineGraph();
     },
     login: function() {
         delete window.sidebarView;
