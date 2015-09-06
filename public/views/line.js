@@ -4,6 +4,7 @@ var LineGraph = Backbone.View.extend({
         this.render();
     },
     render: function() {
+        var self = this;
         var data = [{
             "Client": "ABC",
             "sale": "202",

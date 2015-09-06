@@ -6,8 +6,7 @@ Front end written in backbone, jQuery, and templating done in handlebars
 ##Installation instructions
 Make sure you have mongodb installed. <br>
 In one terminal window run: (if on windows make sure your mongodb directory is in you path)
-
-Just learnt logo breaks on safari. Will need to test on different browsers.
+Supports only chrome as of now.
 
 ```
 $mongod
