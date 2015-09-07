@@ -7,7 +7,7 @@ var PieView = Backbone.View.extend({
         var data = JSON.parse(localStorage.getItem("pieData"));
         var topTen = JSON.parse(localStorage.getItem("topTen"));
         var obj = {};
-        for(var i = 0; i < topTen.length; i++){
+        for (var i = 0; i < topTen.length; i++) {
             topTen[i] = topTen[i].replace(/\s|&/g, '');
             obj[topTen[i]] = true;
         }
@@ -15,6 +15,14 @@ var PieView = Backbone.View.extend({
         this.draw(data, obj);
     },
     draw: function(dataObj, topTen) {
+        var tip = d3.tip()
+            .attr('class', 'd3-tip')
+            .offset([0, 0])
+            .html(function(d) {
+                d.data.value = d.value;
+                return d.data.label + ": " + dataObj[d.data.label];
+            });
+
         var svg = d3.select(".main-container")
             .append("svg")
             .attr("class", "pie-chart")
@@ -27,6 +35,8 @@ var PieView = Backbone.View.extend({
         svg.append("g")
             .attr("class", "lines");
 
+        svg.call(tip);
+
         var width = 960,
             height = 600,
             radius = Math.min(width, height) / 2;
@@ -36,6 +46,7 @@ var PieView = Backbone.View.extend({
             .value(function(d) {
                 return d.value;
             });
+
 
         var arc = d3.svg.arc()
             .outerRadius(radius * 0.8)
@@ -53,7 +64,7 @@ var PieView = Backbone.View.extend({
 
         var color = d3.scale.ordinal()
             .domain(Object.keys(dataObj))
-            .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00", "#3D315B", "#444B6E", "#708B75", "#9AB87A", "#F8F991"]);
+            .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);// "#3D315B", "#444B6E", "#708B75", "#9AB87A", "#F8F991"]);
 
         function defaultData() {
             var labels = color.domain();
@@ -93,14 +104,16 @@ var PieView = Backbone.View.extend({
 
             slice.enter()
                 .insert("path")
-                .style("fill", function(d) {
+                .attr("fill", function(d) {
                     return color(d.data.label);
                 })
                 .attr("class", "slice")
                 .attr("id", function(d) {
                     var temp = d.data.label.replace(/\s|&/g, '');
                     return temp;
-                });
+                })
+                .on('mouseover', tip.show)
+                .on('mouseout', tip.hide);
 
             slice
                 .transition().duration(1000)
@@ -198,24 +211,14 @@ var PieView = Backbone.View.extend({
         $('.pie-labels').each(function(i) {
             var name = $(this).attr("class").split(/\s/g)[1];
             $(this).hide();
-            if(topTen.hasOwnProperty(name))
+            if (topTen.hasOwnProperty(name))
                 $(this).show();
         });
         $('polyline').each(function(i) {
             var name = $(this).attr("class");
             $(this).hide();
-            if(topTen.hasOwnProperty(name))
+            if (topTen.hasOwnProperty(name))
                 $(this).show();
-        });
-        $(".slice").mouseenter(function() {
-            var id = $(this).attr('id');
-            if(!topTen.hasOwnProperty(id))
-                $("." + id).show(500);
-        });
-        $(".slice").mouseout(function() {
-            var id = $(this).attr('id');
-            if(!topTen.hasOwnProperty(id))
-                $("." + id).hide(500);
         });
     },
     destroyView: function() {
