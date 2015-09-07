@@ -6,11 +6,13 @@ var PieView = Backbone.View.extend({
     render: function() {
         var data = JSON.parse(localStorage.getItem("pieData"));
         var topTen = JSON.parse(localStorage.getItem("topTen"));
+        var obj = {};
         for(var i = 0; i < topTen.length; i++){
             topTen[i] = topTen[i].replace(/\s|&/g, '');
+            obj[topTen[i]] = true;
         }
         console.log(topTen);
-        this.draw(data, topTen);
+        this.draw(data, obj);
     },
     draw: function(dataObj, topTen) {
         var svg = d3.select(".main-container")
@@ -196,28 +198,24 @@ var PieView = Backbone.View.extend({
         $('.pie-labels').each(function(i) {
             var name = $(this).attr("class").split(/\s/g)[1];
             $(this).hide();
-            for(var k = 0; k < topTen.length; k++){
-                if(name === topTen[k]){
-                    $(this).show();
-                }
-            }
+            if(topTen.hasOwnProperty(name))
+                $(this).show();
         });
         $('polyline').each(function(i) {
             var name = $(this).attr("class");
             $(this).hide();
-            for(var k = 0; k < topTen.length; k++){
-                if(name === topTen[k]){
-                    $(this).show();
-                }
-            }
+            if(topTen.hasOwnProperty(name))
+                $(this).show();
         });
         $(".slice").mouseenter(function() {
             var id = $(this).attr('id');
-            $("." + id).show(500);
+            if(!topTen.hasOwnProperty(id))
+                $("." + id).show(500);
         });
         $(".slice").mouseout(function() {
             var id = $(this).attr('id');
-            $("." + id).hide(500);
+            if(!topTen.hasOwnProperty(id))
+                $("." + id).hide(500);
         });
     },
     destroyView: function() {
