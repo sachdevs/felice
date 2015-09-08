@@ -7,7 +7,10 @@ var PieView = Backbone.View.extend({
         var data = JSON.parse(localStorage.getItem("pieData"));
         var topTen = JSON.parse(localStorage.getItem("topTen"));
         var obj = {};
-        for (var i = 0; i < topTen.length; i++) {
+        var val = topTen.length;
+        if(val > 5)
+            val = 5;
+        for (var i = 0; i < val; i++) {
             topTen[i] = topTen[i].replace(/\s|&/g, '');
             obj[topTen[i]] = true;
         }
