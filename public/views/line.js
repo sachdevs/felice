@@ -4,7 +4,18 @@ var LineGraph = Backbone.View.extend({
         this.render();
     },
     render: function() {
-        var self = this;
+        var allTracks = JSON.parse(localStorage.getItem("trackData"));
+        var dateTrackArr = JSON.parse(localStorage.getItem("songData"));
+
+        
+    },
+    /**
+     * data in the format:
+     * Genre: "name",
+     * Date: Int in unix time
+     * Number: # of tracks added at that day
+     */
+    draw: function() {
         var data = [{
             "Client": "ABC",
             "sale": "202",
@@ -126,6 +137,5 @@ var LineGraph = Backbone.View.extend({
                 })
                 .text(d.key);
         });
-
     }
 });

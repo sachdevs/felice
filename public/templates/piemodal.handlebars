@@ -1,0 +1,19 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Artists in your library under the <strong>{{label}}</strong> genre:</h4>
+      </div>
+      <div class="modal-body">
+        <ul>
+        	{{#each artistList}}
+        		<li> {{this}} </li>
+        	{{/each}}
+        </ul>
+        <p>You have saved a total of <strong>{{value}}</strong> song(s) in this genre</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+</div>

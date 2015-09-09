@@ -10,9 +10,9 @@ templates['piemodal'] = template({"1":function(depth0,helpers,partials,data) {
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1, helper, alias1=helpers.helperMissing, alias2="function", alias3=this.escapeExpression;
 
-  return "<div class=\"modal-dialog\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\">&times;</button>\n        <h4 class=\"modal-title\">Artists in your library under the "
+  return "<div class=\"modal-dialog\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\">&times;</button>\n        <h4 class=\"modal-title\">Artists in your library under the <strong>"
     + alias3(((helper = (helper = helpers.label || (depth0 != null ? depth0.label : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"label","hash":{},"data":data}) : helper)))
-    + " genre:</h4>\n      </div>\n      <div class=\"modal-body\">\n        <ul>\n"
+    + "</strong> genre:</h4>\n      </div>\n      <div class=\"modal-body\">\n        <ul>\n"
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.artistList : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "        </ul>\n        <p>You have saved a total of <strong>"
     + alias3(((helper = (helper = helpers.value || (depth0 != null ? depth0.value : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"value","hash":{},"data":data}) : helper)))
@@ -37,5 +37,8 @@ templates['songlist'] = template({"1":function(depth0,helpers,partials,data) {
   return "<h1 id=\"main-header\">Library</h1>\n<ul class=\"songlist\">\n"
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.songList : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "</ul>";
+},"useData":true});
+templates['topTen'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+    return "";
 },"useData":true});
 })();
