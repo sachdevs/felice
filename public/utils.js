@@ -50,6 +50,7 @@ function saveAllDataToDb(data) {
         var dateAndIdArr = [];
         //hash table esque method to check duplicates and create a map of artists that must be called
         var artistIdUnique = {};
+        var idToArtist = {};
         for (var i = 0; i < songinfo.length; i++) {
             //localstorage date data logic
             var dateAndIdObj = {};
@@ -60,11 +61,14 @@ function saveAllDataToDb(data) {
                 artistIdUnique[songinfo[i].track.artists[0].id]++;
             else
                 artistIdUnique[songinfo[i].track.artists[0].id] = 1;
+            idToArtist[songinfo[i].track.artists[0].id] = songinfo[i].track.artists[0].name;
         }
         //physically pains me to make two loops but currently cannot see any better way
         var artistArr = Object.keys(artistIdUnique);
         getEchonestGenres(artistArr, data.local_token, artistIdUnique, function(artistGenreMap, genreCount) {
             localStorage.setItem("pieData", JSON.stringify(genreCount));
+            var genreArtistMap = createGenreArtistMap(artistGenreMap, idToArtist);
+            localStorage.setItem("genreArtistMap", JSON.stringify(genreArtistMap));
             saveTracks(artistGenreMap, songinfo, data.local_token);
             saveArtists(artistArr, artistGenreMap, data.access_token, data.local_token);
             var tempGenreList = [];
@@ -95,6 +99,19 @@ function compare(a, b) {
     if (a.count < b.count)
         return 1;
     return 0;
+}
+
+function createGenreArtistMap(obj, idToArtist){
+    var ret = {};
+    for(var k in obj){
+        for(var i = 0; i < obj[k].length; i++){
+            if(!ret.hasOwnProperty(obj[k][i]))
+                ret[obj[k][i]] = [];
+            ret[obj[k][i]].push(idToArtist[k]);
+        }
+    }
+    console.log(ret);
+    return ret;
 }
 
 /**

@@ -4,20 +4,19 @@ var PieView = Backbone.View.extend({
         this.render();
     },
     render: function() {
+        var genreArtistMap = JSON.parse(localStorage.getItem("genreArtistMap"));
         var data = JSON.parse(localStorage.getItem("pieData"));
         var topTen = JSON.parse(localStorage.getItem("topTen"));
         var obj = {};
-        var val = topTen.length;
-        if(val > 5)
-            val = 5;
-        for (var i = 0; i < val; i++) {
+        for (var i = 0; i < topTen.length; i++) {
             topTen[i] = topTen[i].replace(/\s|&/g, '');
             obj[topTen[i]] = true;
         }
         console.log(topTen);
-        this.draw(data, obj);
+        this.draw(data, obj, genreArtistMap);
     },
-    draw: function(dataObj, topTen) {
+    draw: function(dataObj, topTen, genreArtistMap) {
+        var modalTemplate = Handlebars.templates['piemodal'];
         var tip = d3.tip()
             .attr('class', 'd3-tip')
             .offset([0, 0])
@@ -116,7 +115,14 @@ var PieView = Backbone.View.extend({
                     return temp;
                 })
                 .on('mouseover', tip.show)
-                .on('mouseout', tip.hide);
+                .on('mouseout', tip.hide)
+                .on('click', function(d){
+                    //genreArtistMap
+                    console.log(d);
+
+                    $('#pie-modal').html(modalTemplate(d.data));
+                    $('#pie-modal').modal('show');
+                });
 
             slice
                 .transition().duration(1000)
@@ -214,19 +220,18 @@ var PieView = Backbone.View.extend({
         $('.pie-labels').each(function(i) {
             var name = $(this).attr("class").split(/\s/g)[1];
             $(this).hide();
-            if (topTen.hasOwnProperty(name))
-                $(this).show();
+            // if (topTen.hasOwnProperty(name))
+            //     $(this).show();
         });
         $('polyline').each(function(i) {
             var name = $(this).attr("class");
             $(this).hide();
-            if (topTen.hasOwnProperty(name))
-                $(this).show();
+            // if (topTen.hasOwnProperty(name))
+            //     $(this).show();
         });
     },
     destroyView: function() {
         // COMPLETELY UNBIND THE VIEW
-        this.undelegateEvents();
         this.$el.removeData().unbind();
 
         // Remove view from DOM
