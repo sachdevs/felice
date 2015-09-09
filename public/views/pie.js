@@ -118,8 +118,7 @@ var PieView = Backbone.View.extend({
                 .on('mouseout', tip.hide)
                 .on('click', function(d){
                     //genreArtistMap
-                    console.log(d);
-
+                    d.data.artistList = genreArtistMap[d.data.label];
                     $('#pie-modal').html(modalTemplate(d.data));
                     $('#pie-modal').modal('show');
                 });
@@ -138,97 +137,8 @@ var PieView = Backbone.View.extend({
             slice.exit()
                 .remove();
 
-            /* ------- TEXT LABELS -------*/
-
-            var text = svg.select(".labels").selectAll("text")
-                .data(pie(data), key);
-
-            text.enter()
-                .append("text")
-                .attr("dy", ".35em")
-                .attr("class", function(d) {
-                    var temp = d.data.label.replace(/\s|&/g, '');
-                    return "pie-labels " + temp;
-                })
-                .text(function(d) {
-                    return d.data.label;
-                });
-
-            function midAngle(d) {
-                return d.startAngle + (d.endAngle - d.startAngle) / 2;
-            }
-
-            text.transition().duration(1000)
-                .attrTween("transform", function(d) {
-                    this._current = this._current || d;
-                    var interpolate = d3.interpolate(this._current, d);
-                    this._current = interpolate(0);
-                    return function(t) {
-                        var d2 = interpolate(t);
-                        var pos = outerArc.centroid(d2);
-                        pos[0] = radius * (midAngle(d2) < Math.PI ? 1 : -1);
-                        return "translate(" + pos + ")";
-                    };
-                })
-                .styleTween("text-anchor", function(d) {
-                    this._current = this._current || d;
-                    var interpolate = d3.interpolate(this._current, d);
-                    this._current = interpolate(0);
-                    return function(t) {
-                        var d2 = interpolate(t);
-                        return midAngle(d2) < Math.PI ? "start" : "end";
-                    };
-                });
-
-            text.exit()
-                .remove();
-
-            /* ------- SLICE TO TEXT POLYLINES -------*/
-
-            var polyline = svg.select(".lines").selectAll("polyline")
-                .attr("class", function(d) {
-                    var temp = d.data.label.replace(/\s|&/g, '');
-                    return temp;
-                })
-                .data(pie(data), key);
-
-            polyline.enter()
-                .append("polyline")
-                .attr("class", function(d) {
-                    var temp = d.data.label.replace(/\s|&/g, '');
-                    return temp;
-                });
-
-            polyline.transition().duration(1000)
-                .attrTween("points", function(d) {
-                    this._current = this._current || d;
-                    var interpolate = d3.interpolate(this._current, d);
-                    this._current = interpolate(0);
-                    return function(t) {
-                        var d2 = interpolate(t);
-                        var pos = outerArc.centroid(d2);
-                        pos[0] = radius * 0.95 * (midAngle(d2) < Math.PI ? 1 : -1);
-                        return [arc.centroid(d2), outerArc.centroid(d2), pos];
-                    };
-                });
-
-            polyline.exit()
-                .remove();
             setTimeout(callback, 250);
         };
-
-        $('.pie-labels').each(function(i) {
-            var name = $(this).attr("class").split(/\s/g)[1];
-            $(this).hide();
-            // if (topTen.hasOwnProperty(name))
-            //     $(this).show();
-        });
-        $('polyline').each(function(i) {
-            var name = $(this).attr("class");
-            $(this).hide();
-            // if (topTen.hasOwnProperty(name))
-            //     $(this).show();
-        });
     },
     destroyView: function() {
         // COMPLETELY UNBIND THE VIEW

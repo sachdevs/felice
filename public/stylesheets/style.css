@@ -117,6 +117,7 @@ div {
 
 path.slice:hover{
     fill: #ADD8E6;
+    cursor: pointer;
 }
 
 path.slice {
