@@ -50,9 +50,10 @@ var LineGraph = Backbone.View.extend({
             }
             formattedDataObj.push(temp);
         }
-        console.log(data);
+        console.log(data.slice(0,2));
+        console.log(formattedDataObj.slice(0,2));
 
-        this.draw(data.slice(0,2), formattedDataObj.slice(0,2));
+        this.draw(data.slice(0,6));
     },
     /**
      * data in the format:
@@ -60,8 +61,62 @@ var LineGraph = Backbone.View.extend({
      * Date: Int in unix time
      * Number: # of tracks added at that day
      */
-    draw: function(data, dataGroup) {
-        console.log(dataGroup);
+    draw: function(data) {
+        var datall = [{
+            "Genre": "ABC",
+            "Number": "202",
+            "Date": "2000"
+        }, {
+            "Genre": "ABC",
+            "Number": "215",
+            "Date": "2002"
+        }, {
+            "Genre": "ABC",
+            "Number": "179",
+            "Date": "2004"
+        }, {
+            "Genre": "ABC",
+            "Number": "199",
+            "Date": "2006"
+        }, {
+            "Genre": "ABC",
+            "Number": "134",
+            "Date": "2008"
+        }, {
+            "Genre": "ABC",
+            "Number": "176",
+            "Date": "2010"
+        }, {
+            "Genre": "XYZ",
+            "Number": "100",
+            "Date": "2000"
+        }, {
+            "Genre": "XYZ",
+            "Number": "215",
+            "Date": "2002"
+        }, {
+            "Genre": "XYZ",
+            "Number": "179",
+            "Date": "2004"
+        }, {
+            "Genre": "XYZ",
+            "Number": "199",
+            "Date": "2006"
+        }, {
+            "Genre": "XYZ",
+            "Number": "134",
+            "Date": "2008"
+        }, {
+            "Genre": "XYZ",
+            "Number": "176",
+            "Date": "2013"
+        }];
+        var dataGroup = d3.nest()
+            .key(function(d) {
+                return d.Genre;
+            })
+            .entries(data);
+        console.log(JSON.stringify(dataGroup));
         var color = d3.scale.category10();
         this.$el.append('<svg id="visualisation" width="1000" height="500"></svg>');
         var vis = d3.select("#visualisation"),
