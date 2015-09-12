@@ -16,7 +16,7 @@ var LineGraph = Backbone.View.extend({
         for(var i = 0; i < genreList.length; i++){
             unformattedDataObj[genreList[i]] = {};
             for(var j = 0; j < allTracks.length; j++){
-                var date = trackIdDateMap[allTracks[j].trackId].split('T')[0];
+                var date = Date.parse(trackIdDateMap[allTracks[j].trackId].split('T')[0] + " 00:00:00");
                 if(!unformattedDataObj[genreList[i]].hasOwnProperty(date))
                     unformattedDataObj[genreList[i]][date] = 0;
                 for(var k = 0; k < allTracks[j].genreList.length; k++){
@@ -25,35 +25,30 @@ var LineGraph = Backbone.View.extend({
                 }
             }
         }
-        var formattedDataObj = [];
+        console.log(unformattedDataObj);
         var data = [];
 
         for(var name in unformattedDataObj){
-            var temp = {};
-            temp.key = name;
-            temp.values = [];
-            var datea = 2001;
-            var tempDataObj = {};
             for(var date in unformattedDataObj[name]){
-                var tempDateObj = {};
-                tempDateObj.Genre = name;
-                tempDateObj.Date = datea;
-                tempDateObj.Number = unformattedDataObj[name][date];
-                temp.values.push(tempDateObj);
-
-                tempDataObj.Genre = name;
-                tempDataObj.Date = datea;
-                tempDataObj.Number = unformattedDataObj[name][date];
-
-                data.push(tempDataObj);
-                datea++;
+                var temp = {};
+                temp.Genre = name;
+                temp.Number = unformattedDataObj[name][date];
+                temp.Date = date;
+                data.push(temp);
             }
-            formattedDataObj.push(temp);
         }
-        console.log(data.slice(0,2));
-        console.log(formattedDataObj.slice(0,2));
+        console.log(data);
 
-        this.draw(data.slice(0,6));
+        function compare(a, b){
+            if(a.Date > b.Date)
+                return -1;
+            if(a.Date < b.Date)
+                return 1;
+            if(a.Date === b.Date)
+                return 0;
+        }
+
+        this.draw(data.sort(compare));
     },
     /**
      * data in the format:
@@ -62,61 +57,11 @@ var LineGraph = Backbone.View.extend({
      * Number: # of tracks added at that day
      */
     draw: function(data) {
-        var datall = [{
-            "Genre": "ABC",
-            "Number": "202",
-            "Date": "2000"
-        }, {
-            "Genre": "ABC",
-            "Number": "215",
-            "Date": "2002"
-        }, {
-            "Genre": "ABC",
-            "Number": "179",
-            "Date": "2004"
-        }, {
-            "Genre": "ABC",
-            "Number": "199",
-            "Date": "2006"
-        }, {
-            "Genre": "ABC",
-            "Number": "134",
-            "Date": "2008"
-        }, {
-            "Genre": "ABC",
-            "Number": "176",
-            "Date": "2010"
-        }, {
-            "Genre": "XYZ",
-            "Number": "100",
-            "Date": "2000"
-        }, {
-            "Genre": "XYZ",
-            "Number": "215",
-            "Date": "2002"
-        }, {
-            "Genre": "XYZ",
-            "Number": "179",
-            "Date": "2004"
-        }, {
-            "Genre": "XYZ",
-            "Number": "199",
-            "Date": "2006"
-        }, {
-            "Genre": "XYZ",
-            "Number": "134",
-            "Date": "2008"
-        }, {
-            "Genre": "XYZ",
-            "Number": "176",
-            "Date": "2013"
-        }];
         var dataGroup = d3.nest()
             .key(function(d) {
                 return d.Genre;
             })
             .entries(data);
-        console.log(JSON.stringify(dataGroup));
         var color = d3.scale.category10();
         this.$el.append('<svg id="visualisation" width="1000" height="500"></svg>');
         var vis = d3.select("#visualisation"),
