@@ -421,7 +421,6 @@ function checkValidSpotifyToken(token, callback) {
 }
 
 function unixToISO(d){
-    console.log(d);
     var time = new Date(d);
     return time.toISOString().split("T")[0];
 }

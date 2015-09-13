@@ -96,15 +96,20 @@ var LineGraph = Backbone.View.extend({
             .orient("left");
 
             vis.append("svg:g")
-            .attr("class", "x axis")
+            .attr("class", "axis xaxis")
             .attr("transform", "translate(0," + (HEIGHT - MARGINS.bottom) + ")")
             .call(xAxis)
             .selectAll("text")
             .attr("transform", "rotate(90)");
         vis.append("svg:g")
-            .attr("class", "y axis")
+            .attr("class", "axis yaxis")
             .attr("transform", "translate(" + (MARGINS.left) + ",0)")
             .call(yAxis);
+
+        vis.selectAll(".xaxis text")  // select all the text elements for the xaxis
+          .attr("transform", function(d) {
+             return "translate(" + this.getBBox().height*-2 + "," + this.getBBox().height + ")rotate(-45)";
+        });
 
         var lineGen = d3.svg.line()
             .x(function(d) {
@@ -121,7 +126,7 @@ var LineGraph = Backbone.View.extend({
                     return "hsl(" + Math.random() * 360 + ",100%,50%)";
                 })
                 .attr('stroke-width', 2)
-                .attr('id', 'line_' + d.key)
+                .attr('id', 'line_' + d.key.replace(/\s|&/g, ''))
                 .attr('fill', 'none');
             vis.append("text")
                 .attr("x", (lSpace / 2) + i * lSpace)
@@ -130,7 +135,7 @@ var LineGraph = Backbone.View.extend({
                 .on('click', function() {
                     var active = d.active ? false : true;
                     var opacity = active ? 0 : 1;
-                    d3.select("#line_" + d.key).style("opacity", opacity);
+                    d3.select("#line_" + d.key.replace(/\s|&/g, '')).style("opacity", opacity);
                     d.active = active;
                 })
                 .text(d.key);
@@ -138,7 +143,7 @@ var LineGraph = Backbone.View.extend({
             $('.main-container').append('<button class="legend-button">'+d.key+'</button>').click(function(){
                     var active = d.active ? false : true;
                     var opacity = active ? 0 : 1;
-                    d3.select("#line_" + d.key).style("opacity", opacity);
+                    d3.select("#line_" + d.key.replace(/\s|&/g, '')).style("opacity", opacity);
                     d.active = active;
             });
         });
