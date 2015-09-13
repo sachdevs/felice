@@ -101,7 +101,7 @@ var LineGraph = Backbone.View.extend({
             .call(xAxis)
             .selectAll("text")
             .attr("transform", "rotate(90)");
-        vis.append("svg:g")
+            vis.append("svg:g")
             .attr("class", "axis yaxis")
             .attr("transform", "translate(" + (MARGINS.left) + ",0)")
             .call(yAxis);
@@ -127,26 +127,19 @@ var LineGraph = Backbone.View.extend({
                 })
                 .attr('stroke-width', 2)
                 .attr('id', 'line_' + d.key.replace(/\s|&/g, ''))
-                .attr('fill', 'none');
-            vis.append("text")
-                .attr("x", (lSpace / 2) + i * lSpace)
-                .attr("y", HEIGHT)
-                .attr("class", "legend")
-                .on('click', function() {
-                    var active = d.active ? false : true;
-                    var opacity = active ? 0 : 1;
-                    d3.select("#line_" + d.key.replace(/\s|&/g, '')).style("opacity", opacity);
-                    d.active = active;
-                })
-                .text(d.key);
+                .attr('fill', 'none')
+                .attr('opacity', '0');
 
-            $('.main-container').append('<button class="legend-button">'+d.key+'</button>').click(function(){
-                    var active = d.active ? false : true;
-                    var opacity = active ? 0 : 1;
-                    d3.select("#line_" + d.key.replace(/\s|&/g, '')).style("opacity", opacity);
-                    d.active = active;
-            });
+            $('.main-container').append('<label class="legend-button"><input type="checkbox" data-toggle="toggle">'+d.key+'</label>');
         });
+        $('.legend-button').click(function(){
+            var $pathel = $("#line_" + $(this).text().replace(/\s|&/g, ''));
+            if($pathel.css("opacity") === '1')
+                $pathel.css("opacity", '0');
+            else
+                $pathel.css("opacity", '1');
+        });
+        vis.style('float', 'left');
 
     }
 });

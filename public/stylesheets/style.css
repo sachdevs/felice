@@ -167,6 +167,15 @@ polyline {
  * Line
  */
 
+ #visualization {
+    float: left;
+    display: block;
+ }
+
+ .legend-button {
+    float: left;
+ }
+
 .axis path {
     fill: none;
     stroke: #777;
