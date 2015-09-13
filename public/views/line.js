@@ -6,6 +6,7 @@ var LineGraph = Backbone.View.extend({
     render: function() {
         var allTracks = JSON.parse(localStorage.getItem("trackData"));
         var dateTrackArr = JSON.parse(localStorage.getItem("songData"));
+        var pieData = JSON.parse(localStorage.getItem("pieData"));
         var genreList = Object.keys(JSON.parse(localStorage.getItem("genreArtistMap")));
         var trackIdDateMap = {};
 
@@ -31,10 +32,12 @@ var LineGraph = Backbone.View.extend({
         for(var name in unformattedDataObj){
             for(var date in unformattedDataObj[name]){
                 var temp = {};
-                temp.Genre = name;
-                temp.Number = unformattedDataObj[name][date];
-                temp.Date = date;
-                data.push(temp);
+                if(pieData[name] > 1){
+                    temp.Genre = name;
+                    temp.Number = unformattedDataObj[name][date];
+                    temp.Date = date;
+                    data.push(temp);
+                }
             }
         }
         console.log(data);
@@ -57,6 +60,7 @@ var LineGraph = Backbone.View.extend({
      * Number: # of tracks added at that day
      */
     draw: function(data) {
+        var self = this;
         var dataGroup = d3.nest()
             .key(function(d) {
                 return d.Genre;
@@ -85,15 +89,18 @@ var LineGraph = Backbone.View.extend({
                 return d.Number;
             })]),
             xAxis = d3.svg.axis()
-            .scale(xScale),
+            .scale(xScale)
+            .tickFormat(unixToISO),
             yAxis = d3.svg.axis()
             .scale(yScale)
             .orient("left");
 
-        vis.append("svg:g")
+            vis.append("svg:g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + (HEIGHT - MARGINS.bottom) + ")")
-            .call(xAxis);
+            .call(xAxis)
+            .selectAll("text")
+            .attr("transform", "rotate(90)");
         vis.append("svg:g")
             .attr("class", "y axis")
             .attr("transform", "translate(" + (MARGINS.left) + ",0)")
@@ -127,6 +134,14 @@ var LineGraph = Backbone.View.extend({
                     d.active = active;
                 })
                 .text(d.key);
+
+            $('.main-container').append('<button class="legend-button">'+d.key+'</button>').click(function(){
+                    var active = d.active ? false : true;
+                    var opacity = active ? 0 : 1;
+                    d3.select("#line_" + d.key).style("opacity", opacity);
+                    d.active = active;
+            });
         });
+
     }
 });

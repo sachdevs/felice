@@ -72,7 +72,6 @@ function saveAllDataToDb(data) {
             saveTracks(artistGenreMap, songinfo, data.local_token);
             saveArtists(artistArr, artistGenreMap, data.access_token, data.local_token);
             var tempGenreList = [];
-            console.log(genreCount);
             for (var k in genreCount) {
                 tempGenreList.push({
                     name: k,
@@ -419,4 +418,10 @@ function checkValidSpotifyToken(token, callback) {
     callSpotify('https://api.spotify.com/v1/me', {}, token, function(data) {
         return callback(data !== null);
     });
+}
+
+function unixToISO(d){
+    console.log(d);
+    var time = new Date(d);
+    return time.toISOString().split("T")[0];
 }
