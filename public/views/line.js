@@ -128,7 +128,7 @@ var LineGraph = Backbone.View.extend({
                 .attr('stroke-width', 2)
                 .attr('id', 'line_' + d.key.replace(/\s|&/g, ''))
                 .attr('fill', 'none')
-                .attr('opacity', '0');
+                .attr('opacity', '1');
 
             $('.main-container').append('<label class="legend-button"><input type="checkbox" data-toggle="toggle">'+d.key+'</label>');
         });
