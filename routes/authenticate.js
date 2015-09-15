@@ -12,8 +12,9 @@ router.post('/', function(req, res) {
     var authOptions = {
         url: 'https://accounts.spotify.com/api/token',
         form: {
+            //!!! change when deploying
             code: req.body.code,
-            redirect_uri: "http://localhost:3000/",
+            redirect_uri: "http://10.71.4.82:3000/",
             grant_type: 'authorization_code'
         },
         headers: {
