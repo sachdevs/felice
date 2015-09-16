@@ -7,6 +7,7 @@ var SidebarView = Backbone.View.extend({
         var template = Handlebars.templates['sidebar'];
         this.$el.html(template({}));
         $('#song-list').click(function() {
+            $(this).css("background-color", "#121212");
             window.location = root + '/#';
         });
         $('#pie').click(function() {

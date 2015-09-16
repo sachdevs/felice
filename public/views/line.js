@@ -68,20 +68,20 @@ var LineGraph = Backbone.View.extend({
             .entries(data);
         var tip = d3.tip()
             .attr('class', 'd3-tip')
-            .offset([0, -100])
+            .offset([0, 0])
             .html(function(d) {
                 return d.Genre;
             });
         var color = d3.scale.category10();
-        var WIDTH = window.innerWidth;
-        this.$el.append('<svg id="visualisation" width="1000" height="'+WIDTH+'"></svg>');
+        var WIDTH = window.innerWidth - 100;
+        this.$el.append('<svg id="visualisation" width="' + WIDTH + '" height="' + '600' + '"></svg>');
         var vis = d3.select("#visualisation"),
-            HEIGHT = 500,
+            HEIGHT = 600,
             MARGINS = {
-                top: 50,
+                top: 80,
                 right: 20,
-                bottom: 50,
-                left: 50
+                bottom: 80,
+                left: 30
             },
             lSpace = WIDTH / dataGroup.length;
         xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([d3.min(data, function(d) {
@@ -144,6 +144,21 @@ var LineGraph = Backbone.View.extend({
                 .on('mouseout', tip.hide);
 
         });
+
+        vis.append("text")
+            .attr("class", "xlabel")
+            .attr("text-anchor", "end")
+            .attr("x", WIDTH / 2)
+            .attr("y", HEIGHT)
+            .attr("fill", "white")
+            .text("Time");
+        vis.append("text")
+            .attr("y", 40)
+            .attr("x", WIDTH/2)
+            .attr("dy", "1em")
+            .style("text-anchor", "middle")
+            .attr("fill", "white")
+            .text("# of songs added by genre vs Time");
         vis.style('float', 'left');
 
     }
