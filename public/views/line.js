@@ -10,18 +10,18 @@ var LineGraph = Backbone.View.extend({
         var genreList = Object.keys(JSON.parse(localStorage.getItem("genreArtistMap")));
         var trackIdDateMap = {};
 
-        for(var i = 0; i < dateTrackArr.length; i++)
+        for (var i = 0; i < dateTrackArr.length; i++)
             trackIdDateMap[dateTrackArr[i].trackId] = dateTrackArr[i].date;
 
         var unformattedDataObj = {};
-        for(var i = 0; i < genreList.length; i++){
+        for (var i = 0; i < genreList.length; i++) {
             unformattedDataObj[genreList[i]] = {};
-            for(var j = 0; j < allTracks.length; j++){
+            for (var j = 0; j < allTracks.length; j++) {
                 var date = Date.parse(trackIdDateMap[allTracks[j].trackId].split('T')[0] + " 00:00:00");
-                if(!unformattedDataObj[genreList[i]].hasOwnProperty(date))
+                if (!unformattedDataObj[genreList[i]].hasOwnProperty(date))
                     unformattedDataObj[genreList[i]][date] = 0;
-                for(var k = 0; k < allTracks[j].genreList.length; k++){
-                    if(allTracks[j].genreList[k] === genreList[i])
+                for (var k = 0; k < allTracks[j].genreList.length; k++) {
+                    if (allTracks[j].genreList[k] === genreList[i])
                         unformattedDataObj[genreList[i]][date]++;
                 }
             }
@@ -29,10 +29,10 @@ var LineGraph = Backbone.View.extend({
         console.log(unformattedDataObj);
         var data = [];
 
-        for(var name in unformattedDataObj){
-            for(var date in unformattedDataObj[name]){
+        for (var name in unformattedDataObj) {
+            for (var date in unformattedDataObj[name]) {
                 var temp = {};
-                if(pieData[name] > 1){
+                if (pieData[name] > 1) {
                     temp.Genre = name;
                     temp.Number = unformattedDataObj[name][date];
                     temp.Date = date;
@@ -42,12 +42,12 @@ var LineGraph = Backbone.View.extend({
         }
         console.log(data);
 
-        function compare(a, b){
-            if(a.Date > b.Date)
+        function compare(a, b) {
+            if (a.Date > b.Date)
                 return -1;
-            if(a.Date < b.Date)
+            if (a.Date < b.Date)
                 return 1;
-            if(a.Date === b.Date)
+            if (a.Date === b.Date)
                 return 0;
         }
 
@@ -66,10 +66,16 @@ var LineGraph = Backbone.View.extend({
                 return d.Genre;
             })
             .entries(data);
+        var tip = d3.tip()
+            .attr('class', 'd3-tip')
+            .offset([0, -100])
+            .html(function(d) {
+                return d.Genre;
+            });
         var color = d3.scale.category10();
-        this.$el.append('<svg id="visualisation" width="1000" height="500"></svg>');
+        var WIDTH = window.innerWidth;
+        this.$el.append('<svg id="visualisation" width="1000" height="'+WIDTH+'"></svg>');
         var vis = d3.select("#visualisation"),
-            WIDTH = 1000,
             HEIGHT = 500,
             MARGINS = {
                 top: 50,
@@ -95,21 +101,23 @@ var LineGraph = Backbone.View.extend({
             .scale(yScale)
             .orient("left");
 
-            vis.append("svg:g")
+        vis.call(tip);
+
+        vis.append("svg:g")
             .attr("class", "axis xaxis")
             .attr("transform", "translate(0," + (HEIGHT - MARGINS.bottom) + ")")
             .call(xAxis)
             .selectAll("text")
             .attr("transform", "rotate(90)");
-            vis.append("svg:g")
+        vis.append("svg:g")
             .attr("class", "axis yaxis")
             .attr("transform", "translate(" + (MARGINS.left) + ",0)")
             .call(yAxis);
 
-        vis.selectAll(".xaxis text")  // select all the text elements for the xaxis
-          .attr("transform", function(d) {
-             return "translate(" + this.getBBox().height*-2 + "," + this.getBBox().height + ")rotate(-45)";
-        });
+        vis.selectAll(".xaxis text") // select all the text elements for the xaxis
+            .attr("transform", function(d) {
+                return "translate(" + this.getBBox().height * -2 + "," + this.getBBox().height + ")rotate(-45)";
+            });
 
         var lineGen = d3.svg.line()
             .x(function(d) {
@@ -120,7 +128,10 @@ var LineGraph = Backbone.View.extend({
             })
             .interpolate("basis");
         dataGroup.forEach(function(d, i) {
-            vis.append('svg:path')
+            vis.selectAll('#visualization.path')
+                .data(d.values)
+                .enter()
+                .append('svg:path')
                 .attr('d', lineGen(d.values))
                 .attr('stroke', function(d, j) {
                     return "hsl(" + Math.random() * 360 + ",100%,50%)";
@@ -128,16 +139,10 @@ var LineGraph = Backbone.View.extend({
                 .attr('stroke-width', 2)
                 .attr('id', 'line_' + d.key.replace(/\s|&/g, ''))
                 .attr('fill', 'none')
-                .attr('opacity', '1');
+                .attr('class', 'line-paths')
+                .on('mouseover', tip.show)
+                .on('mouseout', tip.hide);
 
-            $('.main-container').append('<label class="legend-button"><input type="checkbox" data-toggle="toggle">'+d.key+'</label>');
-        });
-        $('.legend-button').click(function(){
-            var $pathel = $("#line_" + $(this).text().replace(/\s|&/g, ''));
-            if($pathel.css("opacity") === '1')
-                $pathel.css("opacity", '0');
-            else
-                $pathel.css("opacity", '1');
         });
         vis.style('float', 'left');
 

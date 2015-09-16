@@ -283,9 +283,9 @@
             return count < baseGenreArr.length;
         },
         function(callback) {
-            $.getJSON('http://developer.echonest.com/api/v4/genre/similar?api_key=JWARDUHE5GKDMWFDJ&format=jsonp&name=' + baseGenreArr[i] + '&callback=?', function(res) {
+            $.getJSON('http://developer.echonest.com/api/v4/genre/similar?api_key=JWARDUHE5GKDMWFDJ&format=jsonp&name=' + baseGenreArr[count] + '&callback=?', function(res) {
                 var arr = res.response.genres;
-                obj[baseGenreArr[i]] = arr;
+                obj[baseGenreArr[count]] = arr;
                 console.log(obj);
             });
             count++;
@@ -295,14 +295,6 @@
             console.log(obj);
         }
     );
-
-    for (var i = 0; i < baseGenreArr.length; i++) {
-        (function(i, data) {
-            setTimeout(function() {
-                (function(datall, i) {})(data, i);
-            }, 1000);
-        }(i, obj));
-    }
     </script>
 </body>
 

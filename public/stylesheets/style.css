@@ -193,6 +193,10 @@ polyline {
     fill: white;
 }
 
+.line-paths:hover{
+    cursor: pointer;
+}
+
 
 /**
  * no highlighting
