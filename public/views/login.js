@@ -23,7 +23,7 @@ var LoginView = Backbone.View.extend({
             var state = generateRandomString(16);
 
             localStorage.setItem(stateKey, state);
-            var scope = 'user-read-private user-read-email user-library-read';
+            var scope = 'user-read-private user-read-email user-library-read playlist-modify-public';
 
             var url = 'https://accounts.spotify.com/authorize';
             url += '?response_type=code';

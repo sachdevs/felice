@@ -12,12 +12,13 @@ var PlaylistGenView = Backbone.View.extend({
             var query = $(this).val();
             if (code === 13 && query !== '' && query.indexOf(':') !== -1) {
                 query = query.split(':')[2];
-                self.getUser(query);
-            }
-            else if(code === 13){
-                $(".playlist-gen").html('<h3 id="err"> Your Spotify URI is invalid! </h3>')
-                $("#err").hide();
-                $("#err").show(500);
+                if (query !== localStorage.getItem("userId"))
+                    self.getUser(query);
+                else {
+                    self.showErr("That's your own URI :)");
+                }
+            } else if (code === 13) {
+                self.showErr('Your Spotify URI is invalid!');
             }
         });
     },
@@ -32,9 +33,7 @@ var PlaylistGenView = Backbone.View.extend({
                 self.render(JSON.parse(localStorage.getItem("topTen")), r.genreList);
             },
             error: function(r) {
-                $(".playlist-gen").html('<h3 id="err"> User not found, introduce them to felice!</h3>')
-                $("#err").hide();
-                $("#err").show(500);
+                self.showErr('User not found, introduce them to felice!');
             }
         });
     },
@@ -49,5 +48,10 @@ var PlaylistGenView = Backbone.View.extend({
                 intersection.push(topTenB[i]);
         }
         console.log(intersection);
+    },
+    showErr: function(str) {
+        $(".playlist-gen").html('<h3 id="err">' + str + '</h3>');
+        $("#err").hide();
+        $("#err").show(500);
     }
 });
