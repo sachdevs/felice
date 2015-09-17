@@ -5,7 +5,7 @@ var AppRouter = Backbone.Router.extend({
         "profile": "profile",
         "pie": "pie",
         "line": "timegenre",
-        "searchuser/:query": "search"
+        "searchuser": "search"
     },
     initialize: function() {
         //TEMP TODO should actually check for tokens not auth codes
@@ -23,6 +23,7 @@ var AppRouter = Backbone.Router.extend({
                     },
                     success: function(data) {
                         localStorage.setItem('spotify_token', data.access_token);
+                        localStorage.setItem('local_token', data.local_token);
                         this.sidebarView = new SidebarView();
                         console.log(data);
                         saveAllDataToDb(data).done(function() {});
@@ -45,25 +46,28 @@ var AppRouter = Backbone.Router.extend({
     },
     profile: function() {
         $('.main-container').html("");
-        console.log($('.main-container').html() === "");
         if ($('.main-container').html() === "")
             window.loadingView = new LoadingView();
     },
     pie: function() {
         $('.main-container').html("");
-        console.log($('.main-container').html() === "");
         if ($('.main-container').html() === "")
             window.pieView = new PieView();
     },
     timegenre: function(){
         $('.main-container').html("");
-        console.log($('.main-container').html() === "");
         if ($('.main-container').html() === "")
             window.lineView = new LineGraph();
     },
     login: function() {
         delete window.sidebarView;
         this.loginView = new LoginView();
+    },
+    search: function(){
+        $('.main-container').html("");
+        alert(11);
+        if ($('.main-container').html() === "")
+            window.playlistGen = new PlaylistGenView();
     }
 });
 

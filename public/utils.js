@@ -424,21 +424,3 @@ function unixToISO(d){
     var time = new Date(d);
     return time.toISOString().split("T")[0];
 }
-
-(function(){
-    var nameDistanceMap = {};
-    for(var i = 0; i < allgenres.length; i++){
-        var lObj = new Levenshtein('pop', allgenres[i].name);
-        nameDistanceMap[allgenres[i].name] = lObj.distance;
-    }
-    var sorted = Object.keys(nameDistanceMap).sort(compare);
-    function compare(a,b){
-        if(nameDistanceMap[a] > nameDistanceMap[b])
-            return 1;
-        if(nameDistanceMap[a] < nameDistanceMap[b])
-            return -1;
-        if(nameDistanceMap[a] === nameDistanceMap[b])
-            return 0;
-    }
-    //doesnt particulary have intended behavior
-})();
