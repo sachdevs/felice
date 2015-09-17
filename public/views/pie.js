@@ -1,7 +1,6 @@
 var PieView = Backbone.View.extend({
     el: $('.main-container'),
     initialize: function() {
-        this.render();
     },
     render: function() {
         var genreArtistMap = JSON.parse(localStorage.getItem("genreArtistMap"));

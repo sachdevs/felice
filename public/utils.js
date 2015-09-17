@@ -300,6 +300,7 @@ function saveUser(data, genreList) {
     user.save(obj, {
         success: function(model, response) {
             console.log('Successfully saved yayyy!');
+            window.pieView.render();
         },
         error: function(model, error) {
             console.log(error.responseText);

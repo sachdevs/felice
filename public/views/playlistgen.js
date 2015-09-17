@@ -16,7 +16,8 @@ var PlaylistGenView = Backbone.View.extend({
             }
             else if(code === 13){
                 $(".playlist-gen").html('<h3 id="err"> Your Spotify URI is invalid! </h3>')
-                $("#err").hide(4000);
+                $("#err").hide();
+                $("#err").show(500);
             }
         });
     },
@@ -32,7 +33,8 @@ var PlaylistGenView = Backbone.View.extend({
             },
             error: function(r) {
                 $(".playlist-gen").html('<h3 id="err"> User not found, introduce them to felice!</h3>')
-                $("#err").hide(7000);
+                $("#err").hide();
+                $("#err").show(500);
             }
         });
     },

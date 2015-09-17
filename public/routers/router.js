@@ -1,9 +1,9 @@
 var AppRouter = Backbone.Router.extend({
     routes: {
-        "": "home",
+        "": "pie",
         "login": "login",
         "profile": "profile",
-        "pie": "pie",
+        "list": "list",
         "line": "timegenre",
         "gen": "gen"
     },
@@ -41,7 +41,7 @@ var AppRouter = Backbone.Router.extend({
             }
         });
     },
-    home: function() {
+    list: function() {
         window.songListView = new SongListView();
     },
     profile: function() {
@@ -53,6 +53,7 @@ var AppRouter = Backbone.Router.extend({
         $('.main-container').html("");
         if ($('.main-container').html() === "")
             window.pieView = new PieView();
+       window.pieView.render(); 
     },
     timegenre: function(){
         $('.main-container').html("");

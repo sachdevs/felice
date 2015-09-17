@@ -8,10 +8,10 @@ var SidebarView = Backbone.View.extend({
         this.$el.html(template({}));
         $('#song-list').click(function() {
             $(this).css("background-color", "#121212");
-            window.location = root + '/#';
+            window.location = root + '/#list';
         });
         $('#pie').click(function() {
-            window.location = root + '/#pie';
+            window.location = root + '/#';
         });
         $('#line').click(function() {
             window.location = root + '/#line';
