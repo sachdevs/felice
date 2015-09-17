@@ -17,7 +17,7 @@ var SidebarView = Backbone.View.extend({
             window.location = root + '/#line';
         });
         $('#add-friend').click(function() {
-            window.location = root + '/#add-friend';
+            window.location = root + '/#gen';
         });
         $('#profile').click(function() {
             window.location = root + '/#profile';

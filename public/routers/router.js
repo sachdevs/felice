@@ -5,7 +5,7 @@ var AppRouter = Backbone.Router.extend({
         "profile": "profile",
         "pie": "pie",
         "line": "timegenre",
-        "searchuser": "search"
+        "gen": "gen"
     },
     initialize: function() {
         //TEMP TODO should actually check for tokens not auth codes
@@ -63,9 +63,8 @@ var AppRouter = Backbone.Router.extend({
         delete window.sidebarView;
         this.loginView = new LoginView();
     },
-    search: function(){
+    gen: function(){
         $('.main-container').html("");
-        alert(11);
         if ($('.main-container').html() === "")
             window.playlistGen = new PlaylistGenView();
     }
