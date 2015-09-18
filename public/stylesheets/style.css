@@ -208,6 +208,7 @@ polyline {
 #custom-search-input {
     margin: 0;
     margin-top: 10px;
+    margin-bottom: 10px;
     padding: 0;
 }
 
@@ -239,6 +240,29 @@ polyline {
     z-index: 3;
 }
 
+/**
+ * generator
+ */
+ .gen-view {
+ }
+
+.search-view {
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 7px;
+}
+
+#intersection {
+    height: 100px;
+}
+
+#recommended-songs {
+    height: 500px;
+}
+
+#in-playlist {
+    height: 400px;
+}
 
 /**
  * no highlighting

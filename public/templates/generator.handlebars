@@ -1,0 +1,23 @@
+<div class="gen-view">
+	<div class="row">
+		<div class="col-md-7">
+			<div class="row">
+				<div id="intersection" class="col-md-12 search-view">
+					<h3>Genres you and {{context.name}} both like:</h3>
+					<p>
+						{{#each context.intersection}}
+						{{this}}, 
+						{{/each}}
+					</p>
+				</div>
+				<div id="in-playlist" class="col-md-12 search-view">
+					<h3>Songs in your joint playlist:</h3>
+				</div>
+			</div>
+		</div>
+
+		<div id="recommended-songs" class="col-md-5 search-view">
+			<h3>Recommended songs to add:</h3>
+		</div>
+	</div>
+</div>

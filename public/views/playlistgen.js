@@ -30,14 +30,14 @@ var PlaylistGenView = Backbone.View.extend({
                 'x-access-token': localStorage.getItem('local_token')
             },
             success: function(r) {
-                self.render(JSON.parse(localStorage.getItem("topTen")), r.genreList);
+                self.render(JSON.parse(localStorage.getItem("topTen")), r.genreList, r);
             },
             error: function(r) {
                 self.showErr('User not found, introduce them to felice!');
             }
         });
     },
-    render: function(topTenA, topTenB) {
+    render: function(topTenA, topTenB, userData) {
         var uniqueA = {};
         //compute intersection
         var intersection = [];
@@ -47,6 +47,16 @@ var PlaylistGenView = Backbone.View.extend({
             if (uniqueA.hasOwnProperty(topTenB[i]))
                 intersection.push(topTenB[i]);
         }
+        var context = {};
+        context.intersection = intersection;
+        if(userData.name !== null)
+            context.name = userData.name;
+        else
+            context.name = userData.userId;
+        var template = Handlebars.templates['generator'];
+        $(".playlist-gen").html(template({context}));
+        $(".playlist-gen").hide();
+        $(".playlist-gen").show(500);
         console.log(intersection);
     },
     showErr: function(str) {
