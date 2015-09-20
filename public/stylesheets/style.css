@@ -18,6 +18,9 @@ div {
     color: #C8C8C8;
 }
 
+.op {
+    color: #121212;
+}
 
 /**
  * sidebar stuffs
@@ -247,9 +250,24 @@ polyline {
  }
 
 .search-view {
+    background-color: #FFFFFF;
+    color: #121212;
     border-style: solid;
-    border-width: 1px;
-    border-radius: 7px;
+    border-width: 5px;
+}
+
+.rec-songlist{
+    background-color: #121212;
+    color: #C8C8C8;
+    height: 425px;
+    overflow: auto;
+}
+
+.in-songlist{
+    background-color: #121212;
+    color: #C8C8C8;
+    height: 325px;
+    overflow: auto;
 }
 
 #intersection {

@@ -54,9 +54,11 @@ var PlaylistGenView = Backbone.View.extend({
         else
             context.name = userData.userId;
         var template = Handlebars.templates['generator'];
+        var songList = Handlebars.templates['songlist'];
         $(".playlist-gen").html(template({context}));
         $(".playlist-gen").hide();
         $(".playlist-gen").show(500);
+        var trackData = JSON.parse(localStorage.getItem('trackData'));
         console.log(intersection);
     },
     showErr: function(str) {

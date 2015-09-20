@@ -3,21 +3,70 @@
 		<div class="col-md-7">
 			<div class="row">
 				<div id="intersection" class="col-md-12 search-view">
-					<h3>Genres you and {{context.name}} both like:</h3>
-					<p>
+					<h3 class="op">Genres you and {{context.name}} both like:</h3>
+					<p class="op">
 						{{#each context.intersection}}
 						{{this}}, 
 						{{/each}}
 					</p>
 				</div>
 				<div id="in-playlist" class="col-md-12 search-view">
-					<h3>Songs in your joint playlist:</h3>
+					<h3 class="op">Songs in your joint playlist:</h3>
+					<div class="in-songlist"> 
+						<ul>
+							<li>life</li>
+							<li>life</li>
+							<li>life</li>
+							<li>life</li>
+							<li>life</li>
+							<li>life</li>
+							<li>life</li>
+							<li>life</li>
+							<li>life</li>
+							<li>life</li>
+							<li>life</li>
+							<li>life</li>
+							<li>life</li>
+							<li>life</li>
+							<li>life</li>
+							<li>life</li>
+							<li>life</li>
+							<li>life</li>
+							<li>life</li>
+							<li>life</li>
+							<li>life</li>
+							<li>life</li>
+							<li>life</li>
+							<li>life</li>
+							<li>life</li>
+							<li>life</li>
+							<li>life</li>
+							<li>life</li>
+						</ul>
+						{{#each context.recommendedSongList}}
+						{{this}}
+						{{/each}}
+					</div>
 				</div>
 			</div>
 		</div>
 
 		<div id="recommended-songs" class="col-md-5 search-view">
-			<h3>Recommended songs to add:</h3>
+			<h3 class="op">Recommended songs to add:</h3>
+			<div class="rec-songlist"> 
+				<ul>
+					<li>life</li>
+					<li>life</li>
+					<li>life</li>
+					<li>life</li>
+					<li>life</li>
+					<li>life</li>
+					<li>life</li>
+				</ul>
+				{{#each context.recommendedSongList}}
+				{{this}}
+				{{/each}}
+			</div>
 		</div>
 	</div>
 </div>

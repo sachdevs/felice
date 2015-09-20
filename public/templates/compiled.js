@@ -4,14 +4,26 @@ templates['generator'] = template({"1":function(depth0,helpers,partials,data) {
     return "						"
     + this.escapeExpression(this.lambda(depth0, depth0))
     + ", \n";
+},"3":function(depth0,helpers,partials,data) {
+    return "						"
+    + this.escapeExpression(this.lambda(depth0, depth0))
+    + "\n";
+},"5":function(depth0,helpers,partials,data) {
+    return "				"
+    + this.escapeExpression(this.lambda(depth0, depth0))
+    + "\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1;
 
-  return "<div class=\"gen-view\">\n	<div class=\"row\">\n		<div class=\"col-md-7\">\n			<div class=\"row\">\n				<div id=\"intersection\" class=\"col-md-12 search-view\">\n					<h3>Genres you and "
+  return "<div class=\"gen-view\">\n	<div class=\"row\">\n		<div class=\"col-md-7\">\n			<div class=\"row\">\n				<div id=\"intersection\" class=\"col-md-12 search-view\">\n					<h3 class=\"op\">Genres you and "
     + this.escapeExpression(this.lambda(((stack1 = (depth0 != null ? depth0.context : depth0)) != null ? stack1.name : stack1), depth0))
-    + " both like:</h3>\n					<p>\n"
+    + " both like:</h3>\n					<p class=\"op\">\n"
     + ((stack1 = helpers.each.call(depth0,((stack1 = (depth0 != null ? depth0.context : depth0)) != null ? stack1.intersection : stack1),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + "					</p>\n				</div>\n				<div id=\"in-playlist\" class=\"col-md-12 search-view\">\n					<h3>Songs in your joint playlist:</h3>\n				</div>\n			</div>\n		</div>\n\n		<div id=\"recommended-songs\" class=\"col-md-5 search-view\">\n			<h3>Recommended songs to add:</h3>\n		</div>\n	</div>\n</div>";
+    + "					</p>\n				</div>\n				<div id=\"in-playlist\" class=\"col-md-12 search-view\">\n					<h3 class=\"op\">Songs in your joint playlist:</h3>\n					<div class=\"in-songlist\"> \n						<ul>\n							<li>life</li>\n							<li>life</li>\n							<li>life</li>\n							<li>life</li>\n							<li>life</li>\n							<li>life</li>\n							<li>life</li>\n							<li>life</li>\n							<li>life</li>\n							<li>life</li>\n							<li>life</li>\n							<li>life</li>\n							<li>life</li>\n							<li>life</li>\n							<li>life</li>\n							<li>life</li>\n							<li>life</li>\n							<li>life</li>\n							<li>life</li>\n							<li>life</li>\n							<li>life</li>\n							<li>life</li>\n							<li>life</li>\n							<li>life</li>\n							<li>life</li>\n							<li>life</li>\n							<li>life</li>\n							<li>life</li>\n						</ul>\n"
+    + ((stack1 = helpers.each.call(depth0,((stack1 = (depth0 != null ? depth0.context : depth0)) != null ? stack1.recommendedSongList : stack1),{"name":"each","hash":{},"fn":this.program(3, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+    + "					</div>\n				</div>\n			</div>\n		</div>\n\n		<div id=\"recommended-songs\" class=\"col-md-5 search-view\">\n			<h3 class=\"op\">Recommended songs to add:</h3>\n			<div class=\"rec-songlist\"> \n				<ul>\n					<li>life</li>\n					<li>life</li>\n					<li>life</li>\n					<li>life</li>\n					<li>life</li>\n					<li>life</li>\n					<li>life</li>\n				</ul>\n"
+    + ((stack1 = helpers.each.call(depth0,((stack1 = (depth0 != null ? depth0.context : depth0)) != null ? stack1.recommendedSongList : stack1),{"name":"each","hash":{},"fn":this.program(5, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+    + "			</div>\n		</div>\n	</div>\n</div>";
 },"useData":true});
 templates['login'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     return "<h1 id=\"main-header\">Welcome to felice</h1>\n<button id=\"login-button\" class=\"btn btn-primary\">Login with Spotify</button>";
