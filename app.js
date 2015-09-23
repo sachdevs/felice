@@ -7,7 +7,7 @@ var express = require('express'),
     secret = require('./secrets').key,
     mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/api');
+mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/api');
 
 var routes = require('./routes/index');
 var users = require('./routes/users'),
