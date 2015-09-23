@@ -302,6 +302,7 @@ function saveUser(data, genreList) {
             console.log('Successfully saved yayyy!');
             localStorage.setItem("userId", data.body.id);
             window.pieView.render();
+            Loading.stop();
         },
         error: function(model, error) {
             console.log(error.responseText);

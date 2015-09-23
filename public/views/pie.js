@@ -78,6 +78,7 @@ var PieView = Backbone.View.extend({
         }
 
         function changedData() {
+            Loading.stop();
             var labels = color.domain();
             return labels.map(function(label) {
                 return {
@@ -86,12 +87,6 @@ var PieView = Backbone.View.extend({
                 }
             });
         }
-
-        d3.select(".randomize")
-            .on("click", function() {
-                change(changedData());
-            });
-
 
         change(defaultData(), function() {
             change(changedData());

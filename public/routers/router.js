@@ -22,11 +22,12 @@ var AppRouter = Backbone.Router.extend({
                         code: localStorage.getItem('code')
                     },
                     success: function(data) {
+                        Loading.render();
                         localStorage.setItem('spotify_token', data.access_token);
                         localStorage.setItem('local_token', data.local_token);
                         this.sidebarView = new SidebarView();
                         console.log(data);
-                        saveAllDataToDb(data).done(function() {});
+                        saveAllDataToDb(data);
                     },
                     error: function(data) {
                         window.location = root + '/#login';
@@ -51,9 +52,12 @@ var AppRouter = Backbone.Router.extend({
     },
     pie: function() {
         $('.main-container').html("");
-        if ($('.main-container').html() === "")
+        if ($('.main-container').html() === "" && window.hasOwnProperty('pieView'))
+            window.pieView.render(); 
+        else{
             window.pieView = new PieView();
-       window.pieView.render(); 
+            window.pieView.render();
+        }
     },
     timegenre: function(){
         $('.main-container').html("");
