@@ -14,11 +14,11 @@ router.post('/', function(req, res) {
         form: {
             //!!! change when deploying
             code: req.body.code,
-            redirect_uri: "http://localhost:3000/",
+            redirect_uri: "http://feliceapp.herokuapp.com/",
             grant_type: 'authorization_code'
         },
         headers: {
-            'Authorization': 'Basic ' + (new Buffer('c9ce30f810254abfa32846f44b5533cf' + ':' + client_secret).toString('base64'))
+            'Authorization': 'Basic ' + (new Buffer('b5ad9becd0a54c3bb45f0aed733dab1f' + ':' + client_secret).toString('base64'))
         },
         json: true
     };

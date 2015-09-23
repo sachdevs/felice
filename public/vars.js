@@ -1,3 +1,3 @@
-var root = "http://localhost:3000";
+var root = "http://feliceapp.herokuapp.com";
 var echonestCalled = 0;
 var spotifyCalled = 0;

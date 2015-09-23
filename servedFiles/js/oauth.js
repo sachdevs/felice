@@ -38,7 +38,7 @@ var access_token = params.access_token,
 loginBtn = $('#login-button');
 
 loginBtn.click(function() {
-    var client_id = 'c9ce30f810254abfa32846f44b5533cf'; // Your client id
+    var client_id = 'b5ad9becd0a54c3bb45f0aed733dab1f'; // Your client id
     var redirect_uri = 'http://localhost:8888/'; // Your redirect uri
 
     var state = generateRandomString(16);
