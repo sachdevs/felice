@@ -1,4 +1,4 @@
-# felice
+# [felice](http://feliceapp.herokuapp.com/)
 A bunch of data for your Spotify music library <br>
 Quick description of approach: <br>
 Rest api written in express js, node, mongoose and a few miscellaneous libs <br>
