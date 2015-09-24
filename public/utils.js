@@ -109,7 +109,6 @@ function createGenreArtistMap(obj, idToArtist){
             ret[obj[k][i]].push(idToArtist[k]);
         }
     }
-    console.log(ret);
     return ret;
 }
 
@@ -214,7 +213,8 @@ function createUrlList(artistArr) {
         else
             url = url + artistArr[i] + ',';
     }
-    urlArr.push(url);
+    if(url !== "https://api.spotify.com/v1/artists/?ids=")
+        urlArr.push(url);
     return urlArr;
 }
 
@@ -380,7 +380,6 @@ function getEchonestGenres(artistArr, local_token, artistCountMap, callback) {
                                 artistObj[artistArr[i]] = ret;
                             }).done(function() {
                                 if (i === artistArr.length - 1) {
-                                    console.log(genreCount);
                                     return callback(artistObj, genreCount);
                                 }
                             });
