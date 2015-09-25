@@ -1,9 +1,11 @@
 var LoginView = Backbone.View.extend({
-    el: $('.main-container'),
+    el: $('.login-container'),
     initialize: function() {
         this.render();
     },
     render: function() {
+        var self = this;
+        this.$el.show();
     	//covering edge case where user forcefully concatenates /#login to a random url
     	$('.bs-sidebar').hide();
 
@@ -33,6 +35,7 @@ var LoginView = Backbone.View.extend({
             url += '&state=' + encodeURIComponent(state);
 
             spotifyCalled++;
+            self.$el.hide();
 
             window.location = url;
         });

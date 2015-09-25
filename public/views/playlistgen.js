@@ -49,17 +49,47 @@ var PlaylistGenView = Backbone.View.extend({
         }
         var context = {};
         context.intersection = intersection;
-        if(userData.name !== null)
+        if (userData.name !== null)
             context.name = userData.name;
         else
             context.name = userData.userId;
+        context.recommendedSongList = [];
+        for (var i = 0; i < 10; i++)
+            context.recommendedSongList.push(i);
         var template = Handlebars.templates['generator'];
-        var songList = Handlebars.templates['songlist'];
-        $(".playlist-gen").html(template({context}));
+        $(".playlist-gen").html(template({
+            context
+        }));
         $(".playlist-gen").hide();
         $(".playlist-gen").show(500);
         var trackData = JSON.parse(localStorage.getItem('trackData'));
         console.log(intersection);
+        $('.initem').click(function(){
+            $(this).css("background-color", "#404040");
+            $('.in-songlist').append($(this).clone()
+                .mouseover(function() {
+                    $(this).css("background-color", "#2D2D2D");
+                })
+                .mouseleave(function() {
+                    $(this).css("background-color", "#404040");
+                }));
+        });
+        $('.recitem').click(function(){
+            $(this).css("background-color", "#404040");
+            $('.rec-songlist').append($(this).clone()
+                .mouseover(function() {
+                    $(this).css("background-color", "#2D2D2D");
+                })
+                .mouseleave(function() {
+                    $(this).css("background-color", "#404040");
+                }));
+        });
+        $('.track').mouseover(function() {
+            $(this).css("background-color", "#2D2D2D");
+        });
+        $('.track').mouseleave(function() {
+            $(this).css("background-color", "#404040");
+        });
     },
     showErr: function(str) {
         $(".playlist-gen").html('<h3 id="err">' + str + '</h3>');

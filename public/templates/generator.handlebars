@@ -12,40 +12,16 @@
 				</div>
 				<div id="in-playlist" class="col-md-12 search-view">
 					<h3 class="op">Songs in your joint playlist:</h3>
-					<div class="in-songlist"> 
-						<ul>
-							<li>life</li>
-							<li>life</li>
-							<li>life</li>
-							<li>life</li>
-							<li>life</li>
-							<li>life</li>
-							<li>life</li>
-							<li>life</li>
-							<li>life</li>
-							<li>life</li>
-							<li>life</li>
-							<li>life</li>
-							<li>life</li>
-							<li>life</li>
-							<li>life</li>
-							<li>life</li>
-							<li>life</li>
-							<li>life</li>
-							<li>life</li>
-							<li>life</li>
-							<li>life</li>
-							<li>life</li>
-							<li>life</li>
-							<li>life</li>
-							<li>life</li>
-							<li>life</li>
-							<li>life</li>
-							<li>life</li>
+					<div class="scrollit"> 
+						<ul class="in-songlist songlist">
+								<hr class="track-divider">
+								<li class="track trackdiv recitem">
+									<a href="https://open.spotify.com/track/{{this.trackId}}" target="_blank">
+									</a>
+									<div class="icon-plus">-</div>
+									<p class="song-name">{{this}}</p>
+								</li>
 						</ul>
-						{{#each context.recommendedSongList}}
-						{{this}}
-						{{/each}}
 					</div>
 				</div>
 			</div>
@@ -53,15 +29,17 @@
 
 		<div id="recommended-songs" class="col-md-5 search-view">
 			<h3 class="op">Recommended songs to add:</h3>
-			<div class="rec-songlist"> 
-				<ul>
-					<li>life</li>
-					<li>life</li>
-					<li>life</li>
-					<li>life</li>
-					<li>life</li>
-					<li>life</li>
-					<li>life</li>
+			<div class="scrollit"> 
+				<ul class="rec-songlist songlist">
+					{{#each context.recommendedSongList}}
+						<hr class="track-divider">
+						<li class="track trackdiv initem">
+							<a href="https://open.spotify.com/track/{{this.trackId}}" target="_blank">
+							</a>
+							<div class="icon-plus">+</div>
+							<p class="song-name">{{this}}</p>
+						</li>
+					{{/each}}
 				</ul>
 				{{#each context.recommendedSongList}}
 				{{this}}
