@@ -1,4 +1,5 @@
 # [felice](http://feliceapp.herokuapp.com/)
+### If the site gives an error, its on free heroku, it is likely asleep.
 A bunch of data for your Spotify music library <br>
 Quick description of approach: <br>
 Rest api written in express js, node, mongoose and a few miscellaneous libs <br>
@@ -52,3 +53,7 @@ Since there is a need to validate all api calls in the app, my current solution 
 |{root}/authenticate   |POST w/ authentication code   |Standard   |Returns jwt  |
 
 Standard Auth: felice issued JSON web token, all requests must contain jwt in body in the property 'token' in order to be authenticated.
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/sachdevs/felice/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
