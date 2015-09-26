@@ -38,8 +38,10 @@ var PieView = Backbone.View.extend({
 
         svg.call(tip);
 
-        var width = 960,
-            height = 600,
+
+
+        var width = $(window).width(),
+            height = $(window).height(),
             radius = Math.min(width, height) / 2;
 
         var pie = d3.layout.pie()
@@ -93,7 +95,6 @@ var PieView = Backbone.View.extend({
         });
 
         function change(data, callback) {
-
             /* ------- PIE SLICES -------*/
             var slice = svg.select(".slices").selectAll("path.slice")
                 .data(pie(data), key);

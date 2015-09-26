@@ -160,6 +160,5 @@ var LineGraph = Backbone.View.extend({
             .attr("fill", "white")
             .text("# of songs added by genre vs Time");
         vis.style('float', 'left');
-
     }
 });
