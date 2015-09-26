@@ -1,4 +1,5 @@
 # [felice](http://feliceapp.herokuapp.com/)
+### If the site gives an error, its on free heroku, it is likely asleep.
 A bunch of data for your Spotify music library <br>
 Quick description of approach: <br>
 Rest api written in express js, node, mongoose and a few miscellaneous libs <br>
