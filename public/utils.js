@@ -251,6 +251,8 @@ function getTracks(spotify_token, local_token, callback) {
     var url = 'https://api.spotify.com/v1/me/tracks?limit=50';
     callSpotify(url, {}, spotify_token, function(t) {
         list = list.concat(t.items);
+        if(t.total <= 50)
+            return callback(list);
         for (i = 1; i < Math.ceil(t.total / 50); i++) {
             (function(i, tracks) {
                 callSpotify(url + "&offset=" + (50 * i), {}, spotify_token, function(s) {

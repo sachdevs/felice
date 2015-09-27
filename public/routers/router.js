@@ -26,7 +26,6 @@ var AppRouter = Backbone.Router.extend({
                         localStorage.setItem('spotify_token', data.access_token);
                         localStorage.setItem('local_token', data.local_token);
                         this.sidebarView = new SidebarView();
-                        console.log(data);
                         saveAllDataToDb(data);
                     },
                     error: function(data) {
