@@ -100,11 +100,11 @@ function compare(a, b) {
     return 0;
 }
 
-function createGenreArtistMap(obj, idToArtist){
+function createGenreArtistMap(obj, idToArtist) {
     var ret = {};
-    for(var k in obj){
-        for(var i = 0; i < obj[k].length; i++){
-            if(!ret.hasOwnProperty(obj[k][i]))
+    for (var k in obj) {
+        for (var i = 0; i < obj[k].length; i++) {
+            if (!ret.hasOwnProperty(obj[k][i]))
                 ret[obj[k][i]] = [];
             ret[obj[k][i]].push(idToArtist[k]);
         }
@@ -148,7 +148,7 @@ function saveTracks(artistObj, songinfo, local_token) {
                     console.log(error.responseText);
                 }
             });
-            if(i === songinfo.length-1){
+            if (i === songinfo.length - 1) {
                 localStorage.setItem('trackData', JSON.stringify(trackArr));
                 $(window.songListView).trigger('trackData', [trackArr]);
             }
@@ -207,13 +207,12 @@ function createUrlList(artistArr) {
             url = url + artistArr[i];
             urlArr.push(url);
             url = 'https://api.spotify.com/v1/artists/?ids=';
-        }
-        else if (i === artistArr.length - 1)
+        } else if (i === artistArr.length - 1)
             url = url + artistArr[i];
         else
             url = url + artistArr[i] + ',';
     }
-    if(url !== "https://api.spotify.com/v1/artists/?ids=")
+    if (url !== "https://api.spotify.com/v1/artists/?ids=")
         urlArr.push(url);
     return urlArr;
 }
@@ -251,7 +250,7 @@ function getTracks(spotify_token, local_token, callback) {
     var url = 'https://api.spotify.com/v1/me/tracks?limit=50';
     callSpotify(url, {}, spotify_token, function(t) {
         list = list.concat(t.items);
-        if(t.total <= 50)
+        if (t.total <= 50)
             return callback(list);
         for (i = 1; i < Math.ceil(t.total / 50); i++) {
             (function(i, tracks) {
@@ -274,8 +273,7 @@ function getTracks(spotify_token, local_token, callback) {
 function safeObjectAccess(obj, elementToAccess) {
     try {
         return obj[elementToAccess];
-    }
-    catch (e) {
+    } catch (e) {
         return null;
     }
 }
@@ -341,8 +339,7 @@ function getEchonestGenres(artistArr, local_token, artistCountMap, callback) {
                                 ret.push(arr[j].name);
                                 if (genreCount.hasOwnProperty(arr[j].name)) {
                                     genreCount[arr[j].name] += artistCountMap[artistArr[i]];
-                                }
-                                else {
+                                } else {
                                     genreCount[arr[j].name] = 1;
                                 }
                             }
@@ -353,8 +350,7 @@ function getEchonestGenres(artistArr, local_token, artistCountMap, callback) {
                                 return callback(artistObj, genreCount);
                             }
                         });
-                    }
-                    else {
+                    } else {
                         if (data.genreList !== undefined && data.genreList.length !== 0) {
                             console.log("calling db for artist data");
                             var list = data.genreList;
@@ -365,8 +361,7 @@ function getEchonestGenres(artistArr, local_token, artistCountMap, callback) {
                                 else
                                     genreCount[list[j]] = 1;
                             }
-                        }
-                        else {
+                        } else {
                             console.log("calling echonest in case echonest updated the genres");
                             $.getJSON('http://developer.echonest.com/api/v4/artist/profile?api_key=JWARDUHE5GKDMWFDJ&format=jsonp&id=spotify:artist:' + artistArr[i] + '&bucket=genre&callback=?', function(res) {
                                 var arr = res.response.artist.genres;
@@ -408,6 +403,28 @@ function callSpotify(url, data, access_token, callback) {
             callback(r);
         },
         error: function(r) {
+            console.log(r);
+            callback(null);
+        }
+    });
+}
+
+function callSpotifyPost(url, data, access_token, callback) {
+    spotifyCalled++;
+    $.ajax({
+        url: url,
+        method: "POST",
+        dataType: 'json',
+        contentType:"application/json",
+        data: JSON.stringify(data),
+        headers: {
+            'Authorization': 'Bearer ' + access_token
+        },
+        success: function(r) {
+            callback(r);
+        },
+        error: function(r) {
+            console.log(r);
             callback(null);
         }
     });
@@ -424,7 +441,56 @@ function checkValidSpotifyToken(token, callback) {
     });
 }
 
-function unixToISO(d){
+/**
+ * getSongsByGenre
+ * @param  {array} genreList
+ */
+function getSongsByGenre(genreList, callback) {
+    var trackList = [];
+    if(genreList.length === 0)
+        return callback(null);
+    getArtistsByGenre(genreList, function(artistList) {
+        for (var i = 0; i < artistList.length; i++) {
+            var token = localStorage.getItem("spotify_token");
+            (function(i, trackList) {
+                callSpotify('https://api.spotify.com/v1/artists/' + artistList[i] + '/top-tracks?country=US', {}, token, function(data) {
+                    var val = 5;
+                    for(var j = 0; j < val; j++){
+                        trackList.push({
+                            uri: data.tracks[j].uri,
+                            id: data.tracks[j].id,
+                            artist: data.tracks[j].artists[0].name,
+                            name: data.tracks[j].name
+                        });
+                        console.log(val*artistList.length);
+                        if(trackList.length >= (val*artistList.length || trackList.length > 100)){
+                            console.log(trackList);
+                            return callback(trackList);
+                        }
+                    }
+                });
+            })(i, trackList);
+        }
+    });
+}
+
+function getArtistsByGenre(genreList, done) {
+    var list = [];
+    for (var i = 0; i < genreList.length; i++) {
+        (function(list, i) {
+            $.getJSON('http://developer.echonest.com/api/v4/genre/artists?api_key=JWARDUHE5GKDMWFDJ&format=jsonp&results=5&bucket=id:spotify&name=' + genreList[i] + '&callback=?', function(res) {
+                for (var j = 0; j < res.response.artists.length; j++) {
+                    list.push(res.response.artists[j].foreign_ids[0].foreign_id.split(':')[2]);
+                };
+                if (list.length >= (5 * genreList.length))
+                    done(list);
+                echonestCalled++;
+            });
+        })(list, i);
+    }
+}
+
+function unixToISO(d) {
     var time = new Date(d);
     return time.toISOString().split("T")[0];
 }

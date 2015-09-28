@@ -2,9 +2,7 @@ var express = require('express'),
     mongoose = require('mongoose'),
     querystring = require('querystring'),
     request = require('request');
-var User = require('../models/user'),
-    secret = require('../secrets').key,
-    client_secret = require('../secrets').secret;
+var User = require('../models/user');
 var jwt = require('jsonwebtoken');
 var router = express.Router();
 
@@ -14,11 +12,11 @@ router.post('/', function(req, res) {
         form: {
             //!!! change when deploying
             code: req.body.code,
-            redirect_uri: "http://feliceapp.herokuapp.com/",
+            redirect_uri: "http://localhost:3000/" || "http://feliceapp.herokuapp.com/",
             grant_type: 'authorization_code'
         },
         headers: {
-            'Authorization': 'Basic ' + (new Buffer('b5ad9becd0a54c3bb45f0aed733dab1f' + ':' + client_secret).toString('base64'))
+            'Authorization': 'Basic ' + (new Buffer('b5ad9becd0a54c3bb45f0aed733dab1f' + ':' + process.env.SPOTIFY_SECRET).toString('base64'))
         },
         json: true
     };
@@ -36,7 +34,7 @@ router.post('/', function(req, res) {
             };
             var admins = '12183851229'
             var admin = false;
-            var token = jwt.sign(body.access_token, secret, {
+            var token = jwt.sign(body.access_token, process.env.JWT_SIGN, {
                 expiresInMinutes: 1440 // expires in 24 hours
             });
             // use the access token to access the Spotify Web API
@@ -54,6 +52,7 @@ router.post('/', function(req, res) {
             });
         }
         else {
+            console.log(response);
             return res.status(403).json({
                 msg: "dun goofed"
             });

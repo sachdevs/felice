@@ -20,6 +20,7 @@ div {
 
 .op {
     color: #121212;
+    display: inline-block;
 }
 
 
@@ -285,6 +286,7 @@ polyline {
     border-width: 5px;
 }
 
+
 .rec-songlist {
     background-color: #404040;
     color: #C8C8C8;
@@ -308,7 +310,12 @@ polyline {
 }
 
 #in-playlist {
-    height: 400px;
+    position: relative;
+}
+
+.save-songs {
+    display: inline-block;
+    margin-bottom: 10px;
 }
 
 .icon-plus {
@@ -325,11 +332,19 @@ polyline {
 .song-name {
     display: inline-block;
     vertical-align: middle;
-    margin-bottom: -7px;
+    margin-bottom: 0px;
 }
 
 .trackdiv {
     cursor: pointer;
+}
+
+.initem {
+    padding-left: 0;
+}
+
+.recitem {
+    padding-left: 0;
 }
 
 

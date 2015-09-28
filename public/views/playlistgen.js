@@ -48,47 +48,78 @@ var PlaylistGenView = Backbone.View.extend({
                 intersection.push(topTenB[i]);
         }
         var context = {};
-        context.intersection = intersection;
-        if (userData.name !== null)
-            context.name = userData.name;
-        else
-            context.name = userData.userId;
-        context.recommendedSongList = [];
-        for (var i = 0; i < 10; i++)
-            context.recommendedSongList.push(i);
-        var template = Handlebars.templates['generator'];
-        $(".playlist-gen").html(template({
-            context
-        }));
-        $(".playlist-gen").hide();
-        $(".playlist-gen").show(500);
-        var trackData = JSON.parse(localStorage.getItem('trackData'));
-        console.log(intersection);
-        $('.initem').click(function(){
-            $(this).css("background-color", "#404040");
-            $('.in-songlist').append($(this).clone()
-                .mouseover(function() {
-                    $(this).css("background-color", "#2D2D2D");
-                })
-                .mouseleave(function() {
-                    $(this).css("background-color", "#404040");
-                }));
-        });
-        $('.recitem').click(function(){
-            $(this).css("background-color", "#404040");
-            $('.rec-songlist').append($(this).clone()
-                .mouseover(function() {
-                    $(this).css("background-color", "#2D2D2D");
-                })
-                .mouseleave(function() {
-                    $(this).css("background-color", "#404040");
-                }));
-        });
-        $('.track').mouseover(function() {
-            $(this).css("background-color", "#2D2D2D");
-        });
-        $('.track').mouseleave(function() {
-            $(this).css("background-color", "#404040");
+        context.intersection = intersection.join(', ');
+        if(intersection.length === 0)
+            context.intersection = "Your tastes are too different! Playlist genreation for special cases such as yours is in development! Thanks for your patience"
+        Loading.render();
+        getSongsByGenre(intersection, function(trackList) {
+            Loading.stop();
+            if (userData.name !== null)
+                context.name = userData.name;
+            else
+                context.name = userData.userId;
+            context.recommendedSongList = trackList;
+            var template = Handlebars.templates['generator'];
+            $(".playlist-gen").html(template({
+                context
+            }));
+
+            $(".playlist-gen").hide();
+            $(".playlist-gen").show(500);
+            var trackData = JSON.parse(localStorage.getItem('trackData'));
+            var stopPropHandler = function(event) {
+                event.stopPropagation();
+            };
+            var inItemClick = function() {
+                $(this).css("background-color", "#404040");
+                $(this).removeClass("initem");
+                $(this).addClass("recitem").click(recItemClick);
+                var minus = $(this).html().replace('<div class="icon-plus"><p class="song-name">-</p></div>', '<div class="icon-plus"><p class="song-name">+</p></div>');
+                $(this).html(minus);
+                $(this).prependTo('.rec-songlist');
+            };
+            var recItemClick = function() {
+                $(this).css("background-color", "#404040");
+                $(this).removeClass("recitem");
+                $(this).addClass("initem").click(inItemClick);
+                var minus = $(this).html().replace('<div class="icon-plus"><p class="song-name">+</p></div>', '<div class="icon-plus"><p class="song-name">-</p></div>');
+                $(this).html(minus);
+                $(this).prependTo('.in-songlist');
+            };
+            console.log(intersection);
+            $('.initem').click(inItemClick);
+            $('.recitem').click(recItemClick);
+            $('.track').mouseover(function() {
+                $(this).css("background-color", "#2D2D2D");
+            });
+            $('.track').mouseleave(function() {
+                $(this).css("background-color", "#404040");
+            });
+            $(".play-button").click(stopPropHandler);
+            var playlistName = "You and " + context.name + " by felice";
+            $('.save-songs').click(function() {
+                Loading.render();
+                var h = $('.in-songlist .initem').find('.uridata');
+                var uris = [];
+                for (var i = 0; i < h.length; i++) {
+                    uris.push($(h[i]).text());
+                }
+                if(uris.length === 0){
+                    Loading.stop();
+                    return;
+                }
+                var token = localStorage.getItem("spotify_token");
+                callSpotifyPost('https://api.spotify.com/v1/users/'+ localStorage.getItem("userId") +'/playlists', {
+                    name: playlistName
+                }, token, function(data) {
+                    var playlistId = data.id;
+                    callSpotifyPost('https://api.spotify.com/v1/users/'+ localStorage.getItem("userId") +'/playlists/'+ playlistId +'/tracks', {
+                        uris: uris
+                    }, token, function(data){
+                        Loading.stop();
+                    });
+                });
+            });
         });
     },
     showErr: function(str) {

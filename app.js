@@ -4,7 +4,6 @@ var express = require('express'),
     cookieParser = require('cookie-parser'),
     bodyParser = require('body-parser'),
     jwt = require('jsonwebtoken'),
-    secret = require('./secrets').key,
     mongoose = require('mongoose');
 
 mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/api');
@@ -34,7 +33,7 @@ app.use('/api/', function(req, res, next) {
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
     if (token) {
         // verifies secret and checks exp
-        jwt.verify(token, secret, function(err, decoded) {
+        jwt.verify(token, process.env.JWT_SIGN, function(err, decoded) {
             if (err) {
                 return res.json({
                     success: false,
