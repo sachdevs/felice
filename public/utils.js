@@ -478,7 +478,7 @@ function getArtistsByGenre(genreList, done) {
     var list = [];
     for (var i = 0; i < genreList.length; i++) {
         (function(list, i) {
-            $.getJSON('http://developer.echonest.com/api/v4/genre/artists?api_key=JWARDUHE5GKDMWFDJ&format=jsonp&results=5&bucket=id:spotify&name=' + genreList[i] + '&callback=?', function(res) {
+            $.getJSON('http://developer.echonest.com/api/v4/genre/artists?api_key=JWARDUHE5GKDMWFDJ&format=jsonp&results=5&bucket=id:spotify&name=' + encodeURIComponent(genreList[i]) + '&callback=?', function(res) {
                 for (var j = 0; j < res.response.artists.length; j++) {
                     list.push(res.response.artists[j].foreign_ids[0].foreign_id.split(':')[2]);
                 };
