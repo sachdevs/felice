@@ -11,7 +11,7 @@ var PieView = Backbone.View.extend({
             topTen[i] = topTen[i].replace(/\s|&/g, '');
             obj[topTen[i]] = true;
         }
-        console.log(topTen);
+        // console.log(topTen);
         this.draw(data, obj, genreArtistMap);
     },
     draw: function(dataObj, topTen, genreArtistMap) {

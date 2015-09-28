@@ -6,7 +6,7 @@ var SongListView = Backbone.View.extend({
             this.render(null, JSON.parse(localStorage.getItem('trackData')));
     },
     render: function(e, trackData) {
-        console.log(trackData);
+        // console.log(trackData);
         var template = Handlebars.templates['songlist'];
         this.$el.html(template({
             songList: trackData

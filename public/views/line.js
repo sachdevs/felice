@@ -26,7 +26,7 @@ var LineGraph = Backbone.View.extend({
                 }
             }
         }
-        console.log(unformattedDataObj);
+        // console.log(unformattedDataObj);
         var data = [];
 
         for (var name in unformattedDataObj) {
@@ -40,7 +40,7 @@ var LineGraph = Backbone.View.extend({
                 }
             }
         }
-        console.log(data);
+        // console.log(data);
 
         function compare(a, b) {
             if (a.Date > b.Date)

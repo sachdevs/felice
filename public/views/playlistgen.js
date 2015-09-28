@@ -86,7 +86,7 @@ var PlaylistGenView = Backbone.View.extend({
                 $(this).html(minus);
                 $(this).prependTo('.in-songlist');
             };
-            console.log(intersection);
+            // console.log(intersection);
             $('.initem').click(inItemClick);
             $('.recitem').click(recItemClick);
             $('.track').mouseover(function() {
