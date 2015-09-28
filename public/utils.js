@@ -250,6 +250,10 @@ function getTracks(spotify_token, local_token, callback) {
     var url = 'https://api.spotify.com/v1/me/tracks?limit=50';
     callSpotify(url, {}, spotify_token, function(t) {
         list = list.concat(t.items);
+        if(t.total === 0){
+            alert("Please return after you have some songs in your library! Felice analyzes only your saved songs!");
+            window.location = root+'/#login';
+        }
         if (t.total <= 50)
             return callback(list);
         for (i = 1; i < Math.ceil(t.total / 50); i++) {
