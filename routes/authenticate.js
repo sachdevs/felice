@@ -12,7 +12,7 @@ router.post('/', function(req, res) {
         form: {
             //!!! change when deploying
             code: req.body.code,
-            redirect_uri: "http://localhost:3000/" || "http://feliceapp.herokuapp.com/",
+            redirect_uri: "http://feliceapp.herokuapp.com/",
             grant_type: 'authorization_code'
         },
         headers: {
