@@ -22,6 +22,10 @@ var SidebarView = Backbone.View.extend({
         $('#profile').click(function() {
             window.location = root + '/#profile';
         });
+        $('.logout').click(function(){
+            localStorage.clear();
+            window.location = root + '/#login';
+        });
         $('.sidebar-containers').mouseover(function() {
             $(this).css("background-color", "#cccccc");
             $(this).css('cursor', 'pointer');

@@ -89,27 +89,4 @@ router.put('/:trackId', function(req, res) {
     });
 });
 
-router.delete('/:trackId', function(req, res) {
-    Track.find({
-        trackId: req.params.trackId
-    }).exec(function(err, tracks) {
-        if (err)
-            return res.status(400).send(err);
-        else if (tracks.length === 0) {
-            return res.status(404).json({
-                msg: 'Not found'
-            });
-        }
-        Track.remove({
-            trackId: req.params.trackId
-        }, function(err) {
-            if (err)
-                return res.status(400).send(err);
-            res.json({
-                msg: 'Track has been deleted'
-            });
-        });
-    });
-});
-
 module.exports = router;

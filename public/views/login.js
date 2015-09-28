@@ -4,6 +4,8 @@ var LoginView = Backbone.View.extend({
         this.render();
     },
     render: function() {
+        if(!window.hasOwnProperty('chrome'))
+            alert("Optimized for Chrome, not tested on other browsers yet! Use with caution");
         var self = this;
         this.$el.show();
     	//covering edge case where user forcefully concatenates /#login to a random url
@@ -33,6 +35,7 @@ var LoginView = Backbone.View.extend({
             url += '&scope=' + encodeURIComponent(scope);
             url += '&redirect_uri=' + encodeURIComponent(redirect_uri);
             url += '&state=' + encodeURIComponent(state);
+            url += '&show_dialog=' + encodeURIComponent('true');
 
             spotifyCalled++;
             self.$el.hide();

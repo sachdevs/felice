@@ -107,5 +107,4 @@ router.delete('/:userId', function(req, res) {
     });
 });
 
-
 module.exports = router;

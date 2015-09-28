@@ -40,7 +40,7 @@ var PieView = Backbone.View.extend({
 
 
 
-        var width = $(window).width(),
+        var width = $(window).width()-175,
             height = $(window).height(),
             radius = Math.min(width, height) / 2;
 

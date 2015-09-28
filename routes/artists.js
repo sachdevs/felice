@@ -77,27 +77,4 @@ router.put('/:artistId', function(req, res) {
     });
 });
 
-router.delete('/:artistId', function(req, res) {
-    Artist.find({
-        artistId: req.params.artistId
-    }).exec(function(err, artists) {
-        if (err)
-            return res.status(400).send(err);
-        else if (artists.length === 0) {
-            return res.status(404).json({
-                msg: 'Not found'
-            });
-        }
-        Artist.remove({
-            artistId: req.params.artistId
-        }, function(err) {
-            if (err)
-                return res.status(400).send(err);
-            res.json({
-                msg: 'Artist has been deleted'
-            });
-        });
-    });
-});
-
 module.exports = router;
