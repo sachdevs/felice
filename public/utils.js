@@ -415,7 +415,7 @@ function callSpotifyPost(url, data, access_token, callback) {
         url: url,
         method: "POST",
         dataType: 'json',
-        contentType: "application/json",
+        contentType:"application/json",
         data: JSON.stringify(data),
         headers: {
             'Authorization': 'Bearer ' + access_token
@@ -447,7 +447,7 @@ function checkValidSpotifyToken(token, callback) {
  */
 function getSongsByGenre(genreList, callback) {
     var trackList = [];
-    if (genreList.length === 0)
+    if(genreList.length === 0)
         return callback(null);
     getArtistsByGenre(genreList, function(artistList) {
         for (var i = 0; i < artistList.length; i++) {
@@ -455,22 +455,19 @@ function getSongsByGenre(genreList, callback) {
             (function(i, trackList) {
                 callSpotify('https://api.spotify.com/v1/artists/' + artistList[i] + '/top-tracks?country=US', {}, token, function(data) {
                     var val = 5;
-                    for (var j = 0; j < val; j++) {
-                        console.log(j);
-                        try {
-                            trackList.push({
-                                uri: data.tracks[j].uri,
-                                id: data.tracks[j].id,
-                                artist: data.tracks[j].artists[0].name,
-                                name: data.tracks[j].name
-                            });
-                            console.log(val * artistList.length);
-                            if (trackList.length >= (val * artistList.length || trackList.length > 100)) {
-                                console.log(trackList);
-                                return callback(trackList);
-                            }
-
-                        } catch (e) {}
+                    if(data.tracks.length < 5)
+                        val = data.tracks.length;
+                    for(var j = 0; j < val; j++){
+                        trackList.push({
+                            uri: data.tracks[j].uri,
+                            id: data.tracks[j].id,
+                            artist: data.tracks[j].artists[0].name,
+                            name: data.tracks[j].name
+                        });
+                        if(trackList.length >= (val*artistList.length -20) || trackList.length > 100){
+                            console.log(trackList);
+                            return callback(trackList);
+                        }
                     }
                 });
             })(i, trackList);
