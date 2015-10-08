@@ -17,7 +17,7 @@ In another window, run:
 $npm install
 $npm start
 ```
-Currently its going to start in dev mode with nodemon, so make sure you have that insstalled with the command:
+Currently its going to start in dev mode with nodemon, so make sure you have that installed with the command:
 ```
 $npm install -g nodemon
 ```
